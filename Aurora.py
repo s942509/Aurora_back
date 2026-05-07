@@ -1,66 +1,59 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
-# 設定頁面配置
-st.set_page_config(page_title="Aurora Background Test", layout="wide")
+# 1. 基礎頁面設定
+st.set_page_config(page_title="Aurora Test", layout="wide")
 
-# 定義 Aurora 背景的 CSS 與 HTML
-# 這裡使用了 CSS 動畫來模擬影片中的 Aurora 效果，包含藍、綠、紫的漸層流動
-aurora_css = """
-<style>
-    :root {
-        --bg-color: #000000;
-        --aurora-1: #00d4ff; /* 藍色 */
-        --aurora-2: #00ff87; /* 綠色 */
-        --aurora-3: #9d50bb; /* 紫色 */
+# 2. 強制覆蓋 Streamlit 預設樣式（確保背景完全填滿且為黑色）
+st.markdown(
+    """
+    <style>
+    /* 移除所有預設間距與背景色 */
+    .stApp {
+        background-color: #000000 !important;
     }
-
-    .aurora-container {
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    
+    /* 極光容器 */
+    .aurora-bg {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: var(--bg-color);
+        z-index: 0;
         overflow: hidden;
-        z-index: -1;
+        background: #000;
     }
 
-    .aurora-blur {
+    /* 極光本體 - 混合藍、綠、紫 */
+    .aurora-layer {
         position: absolute;
-        width: 200%;
-        height: 200%;
-        top: -50%;
-        left: -50%;
+        width: 150%;
+        height: 150%;
+        top: -25%;
+        left: -25%;
         background-image: 
-            radial-gradient(circle at 20% 30%, var(--aurora-1) 0%, transparent 40%),
-            radial-gradient(circle at 80% 70%, var(--aurora-2) 0%, transparent 40%),
-            radial-gradient(circle at 50% 50%, var(--aurora-3) 0%, transparent 50%);
-        filter: blur(80px);
-        opacity: 0.5;
-        animation: aurora-move 20s infinite alternate ease-in-out;
+            radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 255, 135, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 50% 80%, rgba(157, 80, 187, 0.4) 0%, transparent 50%);
+        filter: blur(60px);
+        animation: aurora-flow 15s infinite alternate ease-in-out;
     }
 
-    @keyframes aurora-move {
-        0% { transform: translate(0, 0) rotate(0deg); }
-        50% { transform: translate(-5%, 10%) rotate(5deg); }
-        100% { transform: translate(10%, -5%) rotate(-5deg); }
+    @keyframes aurora-flow {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(5%, -5%) scale(1.1); }
+        100% { transform: translate(-2%, 5%) scale(1); }
     }
+    </style>
+    
+    <div class="aurora-bg">
+        <div class="aurora-layer"></div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-    /* 移除 Streamlit 預設的 padding */
-    .main .block-container {
-        padding: 0;
-    }
-</style>
-
-<div class="aurora-container">
-    <div class="aurora-blur"></div>
-</div>
-"""
-
-# 將 CSS/HTML 注入 Streamlit
-st.markdown(aurora_css, unsafe_allow_html=True)
-
-# 為了測試，我們加一個簡單的標題（雖然你說不需要文字，但這能幫助確認頁面已載入）
-# 如果真的完全不要，可以註解掉下面這行
-st.write("")
+# 3. 佔位符（讓頁面產生內容寬度，避免某些環境下被判定為空頁面）
+st.empty()
