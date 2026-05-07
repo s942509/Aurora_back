@@ -1,163 +1,123 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# 設定頁面資訊
-st.set_page_config(page_title="GSS Matrix Aurora", layout="wide")
+# 設定頁面為寬螢幕，並盡可能隱藏 Streamlit 預設元素
+st.set_page_config(page_title="Background Only", layout="wide", initial_sidebar_state="collapsed")
 
-def matrix_aurora_bg():
-    # 這裡結合了 CSS (背景星空) 與 JavaScript (Canvas 數位極光)
-    matrix_code = """
+def pure_matrix_aurora():
+    # 注入 CSS 強制隱藏所有 Streamlit 文字、選單和邊距
+    # 並實作 Canvas 繪製數位極光緞帶
+    html_code = """
     <style>
-        /* 全局背景：浩瀚星空 */
+        /* 隱藏所有 Streamlit 介面元素 */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        .stApp {background: transparent;}
+        [data-testid="stHeader"] {background: rgba(0,0,0,0);}
+        
         body {
             margin: 0;
-            background-color: #050505;
+            padding: 0;
+            background-color: #050505; /* 宇宙底色 */
             overflow: hidden;
         }
-        
-        #star-container {
+
+        /* 1. 星空背景層 */
+        #star-field {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            background: radial-gradient(circle at center, #1B2735 0%, #050505 100%);
             z-index: -2;
         }
 
-        /* 簡單的星星閃爍效果 */
         .star {
             position: absolute;
             background: white;
             border-radius: 50%;
-            opacity: 0.5;
-            animation: twinkle var(--duration) infinite;
+            opacity: 0.3;
+            animation: twinkle var(--d) infinite;
         }
+        @keyframes twinkle { 0%, 100% {opacity: 0.3;} 50% {opacity: 0.8;} }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
+        /* 2. 數位極光層 */
         #aurora-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            filter: drop-shadow(0 0 10px #00ff41);
-        }
-
-        /* 讓 Streamlit 的內容浮在背景上 */
-        .stApp {
-            background: transparent;
-        }
-        
-        h1, p {
-            color: #00ff41 !important;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            /* 讓極光更有發光感 */
+            filter: blur(0.5px) contrast(1.2) drop-shadow(0 0 15px #00ff41);
         }
     </style>
 
-    <div id="star-container"></div>
+    <div id="star-field"></div>
     <canvas id="aurora-canvas"></canvas>
 
     <script>
-        // 1. 生成星星背景
-        const starContainer = document.getElementById('star-container');
-        for (let i = 0; i < 150; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 2 + 'px';
-            star.style.width = size;
-            star.style.height = size;
-            star.style.top = Math.random() * 100 + '%';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-            starContainer.appendChild(star);
+        // 生成星星
+        const stars = document.getElementById('star-field');
+        for (let i = 0; i < 200; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 2;
+            s.style.width = size + 'px';
+            s.style.height = size + 'px';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.setProperty('--d', (Math.random() * 4 + 2) + 's');
+            stars.appendChild(s);
         }
 
-        // 2. Matrix 極光緞帶邏輯
+        // 矩陣極光緞帶
         const canvas = document.getElementById('aurora-canvas');
         const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ";
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-
-        // 初始化每一列的下墜起始點
-        for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
-        }
-
+        const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ";
+        const fontSize = 14;
+        const columns = Math.floor(w / fontSize);
+        const drops = new Array(columns).fill(0);
         let time = 0;
 
         function draw() {
-            // 這裡用半透明黑色覆蓋，產生字元拖尾效果
-            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // 背景微透明覆蓋，保留字元軌跡
+            ctx.fillStyle = "rgba(5, 5, 5, 0.15)";
+            ctx.fillRect(0, 0, w, h);
 
-            time += 0.02;
+            time += 0.015;
 
             for (let i = 0; i < drops.length; i++) {
-                // 計算「極光緞帶」的波浪邊界 (利用 Sine Wave)
-                // 只在頂部區域活動，h 控制緞帶下緣高度
-                const wave = Math.sin(i * 0.05 + time) * 100 + 150;
-                
-                if (drops[i] * fontSize < wave) {
-                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                // 利用正弦波控制極光下緣，形成「緞帶」感
+                // baseHeight 為緞帶基準高度，waveHeight 為起伏幅度
+                const baseHeight = h * 0.1; 
+                const waveHeight = h * 0.25;
+                const limit = baseHeight + Math.sin(i * 0.08 + time) * waveHeight + Math.cos(i * 0.03 + time * 0.5) * 50;
+
+                if (drops[i] * fontSize < limit) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
                     
-                    // 越接近緞帶邊緣顏色越亮
-                    ctx.fillStyle = "#00ff41";
+                    // 字首設為白色高亮，其餘為矩陣綠
+                    ctx.fillStyle = (Math.random() > 0.9) ? "#fff" : "#00ff41";
                     ctx.font = fontSize + "px monospace";
                     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-                    // 隨機重置，讓它有不規則的緞帶感
-                    if (Math.random() > 0.95) {
-                        drops[i] = 0;
-                    }
-                }
-                
-                drops[i]++;
-                
-                // 如果掉出波浪範圍太遠就重置到頂部
-                if (drops[i] * fontSize > wave + 50) {
+                    if (Math.random() > 0.97) drops[i] = 0;
+                } else {
+                    // 超過緞帶邊界就重置
                     drops[i] = 0;
                 }
+                drops[i]++;
             }
         }
 
-        setInterval(draw, 33);
-
-        window.onresize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
+        setInterval(draw, 35);
+        window.addEventListener('resize', () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
     </script>
     """
-    components.html(matrix_code, height=0) # height=0 因為我們是用 fixed 定位在 body
+    components.html(html_code, height=1000) # 給予足夠高度覆蓋全螢幕
 
-# 執行背景功能
-matrix_aurora_bg()
-
-# Streamlit 頁面內容
-st.title("GSS Solutions Day 2026")
-st.subheader("精準解題，持續演進")
-
-with st.container():
-    st.write("---")
-    st.markdown("""
-    ### 數位轉型 x AI 自動化
-    這是一個結合 **Streamlit** 與 **Matrix 視覺特效** 的官網原型。
-    透過後端 Python 強大的運算能力，我們可以將自動化數據與極致的視覺體驗結合。
-    """)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.info("🚀 **自動化報表**已就緒")
-    with col2:
-        st.success("🤖 **AI 模型**運行中")
-
-st.button("立即報名")
+pure_matrix_aurora()
