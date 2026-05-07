@@ -1,59 +1,77 @@
 import streamlit as st
 
-# 1. 基礎頁面設定
-st.set_page_config(page_title="Aurora Test", layout="wide")
+# 頁面配置
+st.set_page_config(page_title="Cloth Simulation Test", layout="wide")
 
-# 2. 強制覆蓋 Streamlit 預設樣式（確保背景完全填滿且為黑色）
+# 強制背景變黑並移除邊距
 st.markdown(
     """
     <style>
-    /* 移除所有預設間距與背景色 */
     .stApp {
         background-color: #000000 !important;
     }
     header {visibility: hidden;}
     footer {visibility: hidden;}
     
-    /* 極光容器 */
-    .aurora-bg {
+    /* 1. 定義極光布料容器 */
+    .cloth-container {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
         z-index: 0;
-        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background: #000;
+        overflow: hidden;
     }
 
-    /* 極光本體 - 混合藍、綠、紫 */
-    .aurora-layer {
-        position: absolute;
-        width: 150%;
-        height: 150%;
-        top: -25%;
-        left: -25%;
-        background-image: 
-            radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(0, 255, 135, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 50% 80%, rgba(157, 80, 187, 0.4) 0%, transparent 50%);
-        filter: blur(60px);
-        animation: aurora-flow 15s infinite alternate ease-in-out;
+    /* 2. 布料本體：利用漸層模擬披風顏色 */
+    .cloth {
+        position: relative;
+        width: 120%;
+        height: 120%;
+        background: linear-gradient(
+            217deg, rgba(0,212,255,.8), rgba(0,212,255,0) 70.71%
+        ),
+        linear-gradient(127deg, rgba(0,255,135,.8), rgba(0,255,135,0) 70.71%),
+        linear-gradient(336deg, rgba(157,80,187,.8), rgba(157,80,187,0) 70.71%);
+        
+        /* 3. 關鍵：使用 SVG 濾鏡來產生布料皺褶感 */
+        filter: url(#cloth-filter) blur(4px);
+        animation: wind-move 8s infinite alternate ease-in-out;
+        opacity: 0.7;
     }
 
-    @keyframes aurora-flow {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(5%, -5%) scale(1.1); }
-        100% { transform: translate(-2%, 5%) scale(1); }
+    /* 4. 模擬風吹的動態：輕微的縮放與位移 */
+    @keyframes wind-move {
+        0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+        50% { transform: scale(1.05) translate(-2%, 3%) rotate(1deg); }
+        100% { transform: scale(1) translate(2%, -2%) rotate(-1deg); }
     }
     </style>
-    
-    <div class="aurora-bg">
-        <div class="aurora-layer"></div>
+
+    <!-- 5. 嵌入 SVG 濾鏡 (這是實現「飄動感」的核心，對應 Blender 的 Cloth 參數) -->
+    <svg style="display:none">
+        <filter id="cloth-filter">
+            <!-- baseFrequency 的數值決定了皺褶的密度 (對應影片中的 Subdivide 20) -->
+            <feTurbulence type="fractalNoise" baseFrequency="0.015 0.02" numOctaves="3" seed="2">
+                <animate attributeName="baseFrequency" 
+                         dur="10s" 
+                         values="0.015 0.02; 0.02 0.015; 0.015 0.02" 
+                         repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" scale="120" />
+        </filter>
+    </svg>
+
+    <div class="cloth-container">
+        <div class="cloth"></div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# 3. 佔位符（讓頁面產生內容寬度，避免某些環境下被判定為空頁面）
 st.empty()
