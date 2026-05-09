@@ -61,7 +61,7 @@ st.markdown("""
     }
     .case-card {
         position: relative;
-        width: 350px; /* 這裡調整縮圖大小 */
+        width:10%; /* 這裡調整縮圖大小 */
         border-radius: 15px;
         overflow: hidden;
         transition: 0.4s ease;
