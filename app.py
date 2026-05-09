@@ -123,7 +123,7 @@ st.markdown("""
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
         color: white !important;
-        font-size: 28px;
+        font-size: 24px;/* ← 這裡就是調整文字"參考案例"大小的地方 */
         font-weight: bold;
         opacity: 0;
         transition: 0.3s;
