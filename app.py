@@ -49,7 +49,7 @@ particles_html = """<!DOCTYPE html>
 </html>
 """
 
-components.html(particles_html, height=0, scrolling=False)
+components.html(particles_html, height=1000, scrolling=False)
 
 # CSS 樣式
 st.markdown("""
