@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # --- 步驟 1：基礎設定 ---
 st.set_page_config(
@@ -7,28 +8,158 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 步驟 2：全局 CSS - 星空背景 ---
+# --- 步驟 2：Particles.js 動畫 HTML ---
+particles_js_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            overflow: hidden;
+        }
+        
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 250,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle"
+                },
+                "opacity": {
+                    "value": 0.6,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 2,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 120,
+                    "color": "#83c9ff",
+                    "opacity": 0.25,
+                    "width": 1.5
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 0.3,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": true,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 150,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 250,
+                        "duration": 0.6
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>
+"""
+
+# 注入粒子動畫背景
+components.html(particles_js_html, height=0, scrolling=False)
+
+# --- 步驟 3：全局 CSS 樣式 ---
 st.markdown("""
 <style>
-    /* 重置所有邊距 */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    /* HTML 和 Body 背景 */
-    html, body {
-        background: #0a0e27 !important;
-    }
-    
-    /* Streamlit 主容器背景 - 星空圖片 */
+    /* 強制透明背景 */
     .stApp {
-        background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&h=1080&fit=crop') !important;
-        background-attachment: fixed !important;
-        background-size: cover !important;
-        background-position: center !important;
-        background-repeat: no-repeat !important;
+        background: transparent !important;
     }
     
     .main {
@@ -52,19 +183,6 @@ st.markdown("""
         display: none !important;
     }
     
-    /* 背景深色覆蓋層 - 提高文字可讀性 */
-    .stApp::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
-        pointer-events: none;
-        z-index: 0;
-    }
-    
     /* 所有文字顏色 */
     h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #ffffff !important;
@@ -82,8 +200,9 @@ st.markdown("""
         margin: 50px 0;
         letter-spacing: 2px;
         position: relative;
-        z-index: 1;
+        z-index: 10;
         text-shadow: 0 0 20px rgba(131, 201, 255, 0.3);
+        filter: drop-shadow(0 0 10px rgba(131, 201, 255, 0.2));
     }
     
     /* 案例卡片容器 */
@@ -92,7 +211,7 @@ st.markdown("""
         justify-content: center;
         margin: 50px 0;
         position: relative;
-        z-index: 1;
+        z-index: 10;
     }
     
     .case-card {
@@ -101,14 +220,14 @@ st.markdown("""
         height: 250px;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .case-card:hover {
         transform: scale(1.08) translateY(-10px);
-        box-shadow: 0 15px 40px rgba(131, 201, 255, 0.4);
+        box-shadow: 0 15px 40px rgba(131, 201, 255, 0.6);
     }
     
     .case-card img {
@@ -130,7 +249,7 @@ st.markdown("""
         opacity: 0;
         transition: opacity 0.3s ease;
         text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        z-index: 10;
+        z-index: 20;
     }
     
     .case-card:hover .overlay-text {
@@ -150,9 +269,9 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.15);
         margin: 60px auto;
         max-width: 900px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         position: relative;
-        z-index: 1;
+        z-index: 10;
     }
     
     .contact-container h2 {
@@ -185,7 +304,7 @@ st.markdown("""
     textarea:focus {
         background: rgba(255, 255, 255, 0.18) !important;
         border-color: rgba(131, 201, 255, 0.5) !important;
-        box-shadow: 0 0 15px rgba(131, 201, 255, 0.2) !important;
+        box-shadow: 0 0 15px rgba(131, 201, 255, 0.3) !important;
         outline: none;
     }
     
@@ -207,12 +326,12 @@ st.markdown("""
         font-weight: bold !important;
         cursor: pointer !important;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 104, 201, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 104, 201, 0.4);
     }
     
     .submit-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(0, 104, 201, 0.5);
+        box-shadow: 0 6px 25px rgba(0, 104, 201, 0.6);
     }
     
     .submit-btn:active {
@@ -221,7 +340,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 步驟 3：頁面內容 ---
+# --- 步驟 4：頁面內容 ---
 
 # 標題
 st.markdown('<div class="gradient-title">數據工作室</div>', unsafe_allow_html=True)
