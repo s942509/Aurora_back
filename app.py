@@ -153,20 +153,7 @@ st.markdown('<div class="gradient-title">數據工作室</div>', unsafe_allow_ht
 # 參考案例區 (點擊跳轉)
 case_url = "https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/"
 # 這裡建議將你的圖片上傳 GitHub 後替換此 URL
-import base64
-
-# --- 步驟：讀取本地圖片並轉換為 Base64 ---
-def get_base64_image(image_path):
-    with open(image_path, "rb") as img_file:
-        return base64.b64encode(img_file.read()).decode()
-
-# 呼叫你上傳到 GitHub 的檔案名稱
-try:
-    img_base64 = get_base64_image("demo_img.png")
-    demo_img = f"data:image/png;base64,{img_base64}"
-except Exception as e:
-    # 如果讀取失敗的保底方案
-    demo_img = "https://via.placeholder.com/350x200"
+demo_img = "https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true"
 
 # 聯絡表單區
 st.markdown('<div class="contact-container">', unsafe_allow_html=True)
