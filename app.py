@@ -102,7 +102,7 @@ st.markdown("""
     }
     .case-card {
         position: relative;
-        width: 30%; /* ← 這裡就是控制大小的地方，你可以把它改小 */
+        width: 10%; /* ← 這裡就是控制大小的地方，你可以把它改小 */
         border-radius: 15px;
         overflow: hidden;
         transition: 0.4s ease;
