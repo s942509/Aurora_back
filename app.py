@@ -22,7 +22,7 @@ background_with_particles = """
             box-sizing: border-box;
         }
         
-        body {
+        html, body {
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
@@ -117,33 +117,52 @@ background_with_particles = """
 </html>
 """
 
-# 注入背景 + 粒子動畫
-components.html(background_with_particles, height=1200, scrolling=False)
+# 注入背景 + 粒子動畫（設定 height=0 讓它只做背景用）
+components.html(background_with_particles, height=0, scrolling=False)
 
-# --- 步驟 3：全局 CSS 樣式 ---
+# --- 步驟 3：全局 CSS 樣式 - 關鍵是讓所有容器透明 ---
 st.markdown("""
 <style>
-    /* 強制透明背景 */
+    /* HTML 和 Body - 設定為完全透明 */
+    html, body {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Streamlit 主容器 - 必須完全透明 */
     .stApp {
         background: transparent !important;
+        position: relative;
+        z-index: 100;
     }
     
     .main {
         background: transparent !important;
+        position: relative;
+        z-index: 100;
     }
     
     .block-container {
         background: transparent !important;
-        z-index: 10 !important;
         position: relative;
+        z-index: 100;
+        width: 100%;
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
     
     [data-testid="stHeader"] {
         background: transparent !important;
-        z-index: 100 !important;
+        z-index: 200;
     }
     
     [data-testid="stToolbar"] {
+        background: transparent !important;
+    }
+    
+    [data-testid="stDecoratedObject"] {
         background: transparent !important;
     }
     
@@ -152,12 +171,12 @@ st.markdown("""
         display: none !important;
     }
     
-    /* 所有文字顏色 */
+    /* 所有文字顏色 - 確保可見 */
     h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #ffffff !important;
     }
     
-    /* 漸層大標題 */
+    /* 漸層大標題 - 添加發光效果 */
     .gradient-title {
         font-size: 70px;
         font-weight: bold;
@@ -166,36 +185,37 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin: 50px 0;
+        margin: 80px 0 50px 0;
         letter-spacing: 2px;
         position: relative;
-        z-index: 10;
-        filter: drop-shadow(0 0 20px rgba(131, 201, 255, 0.4));
+        z-index: 100;
+        filter: drop-shadow(0 0 30px rgba(131, 201, 255, 0.6));
+        text-shadow: 0 0 40px rgba(131, 201, 255, 0.4);
     }
     
     /* 案例卡片容器 */
     .case-container {
         display: flex;
         justify-content: center;
-        margin: 50px 0;
+        margin: 80px 0;
         position: relative;
-        z-index: 10;
+        z-index: 100;
     }
     
     .case-card {
         position: relative;
-        width: 250px;
-        height: 250px;
-        border-radius: 20px;
+        width: 280px;
+        height: 280px;
+        border-radius: 25px;
         overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 0 60px rgba(131, 201, 255, 0.4), 0 0 30px rgba(0,0,0,0.6);
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .case-card:hover {
-        transform: scale(1.08) translateY(-10px);
-        box-shadow: 0 20px 50px rgba(131, 201, 255, 0.7);
+        transform: scale(1.1) translateY(-15px);
+        box-shadow: 0 0 80px rgba(131, 201, 255, 0.8), 0 0 40px rgba(255, 171, 171, 0.4);
     }
     
     .case-card img {
@@ -211,12 +231,12 @@ st.markdown("""
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
         color: white;
         opacity: 0;
         transition: opacity 0.3s ease;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        text-shadow: 0 2px 15px rgba(0,0,0,0.9);
         z-index: 20;
     }
     
@@ -225,26 +245,31 @@ st.markdown("""
     }
     
     .case-card:hover img {
-        filter: brightness(0.4) blur(3px);
+        filter: brightness(0.3) blur(3px);
     }
     
-    /* 聯絡表單區塊 */
+    /* 聯絡表單區塊 - 毛玻璃效果 */
     .contact-container {
-        background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(20px);
-        padding: 50px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        margin: 60px auto;
-        max-width: 900px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        background: rgba(10, 14, 39, 0.4) !important;
+        backdrop-filter: blur(30px);
+        padding: 60px;
+        border-radius: 30px;
+        border: 2px solid rgba(131, 201, 255, 0.2);
+        margin: 100px auto 60px auto;
+        max-width: 1000px;
+        box-shadow: 
+            0 8px 32px rgba(0,0,0,0.3),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1),
+            0 0 50px rgba(131, 201, 255, 0.15);
         position: relative;
-        z-index: 10;
+        z-index: 100;
     }
     
     .contact-container h2 {
         color: white !important;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        font-size: 28px;
+        text-shadow: 0 0 20px rgba(131, 201, 255, 0.3);
     }
     
     /* 表單輸入框 */
@@ -258,35 +283,38 @@ st.markdown("""
     input[type="text"],
     input[type="email"],
     textarea {
-        padding: 14px 18px !important;
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        background: rgba(255, 255, 255, 0.12) !important;
+        padding: 15px 20px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(131, 201, 255, 0.3) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
         color: white !important;
-        font-size: 14px !important;
+        font-size: 15px !important;
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
     
     input[type="text"]:focus,
     input[type="email"]:focus,
     textarea:focus {
-        background: rgba(255, 255, 255, 0.18) !important;
-        border-color: rgba(131, 201, 255, 0.6) !important;
-        box-shadow: 0 0 20px rgba(131, 201, 255, 0.3) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(131, 201, 255, 0.8) !important;
+        box-shadow: 
+            0 0 20px rgba(131, 201, 255, 0.4),
+            inset 0 0 10px rgba(131, 201, 255, 0.1) !important;
         outline: none;
     }
     
     input::placeholder,
     textarea::placeholder {
-        color: rgba(255, 255, 255, 0.6) !important;
+        color: rgba(255, 255, 255, 0.5) !important;
     }
     
     /* 提交按鈕 */
     .submit-btn {
         width: 100%;
-        padding: 16px !important;
-        margin-top: 20px;
-        border-radius: 10px !important;
+        padding: 18px !important;
+        margin-top: 30px;
+        border-radius: 12px !important;
         border: none !important;
         background: linear-gradient(135deg, #0068C9, #0054a8) !important;
         color: white !important;
@@ -294,26 +322,42 @@ st.markdown("""
         font-weight: bold !important;
         cursor: pointer !important;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 104, 201, 0.5);
+        box-shadow: 
+            0 6px 20px rgba(0, 104, 201, 0.6),
+            0 0 20px rgba(131, 201, 255, 0.2);
     }
     
     .submit-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 104, 201, 0.7);
+        transform: translateY(-3px);
+        box-shadow: 
+            0 10px 30px rgba(0, 104, 201, 0.8),
+            0 0 30px rgba(131, 201, 255, 0.4);
     }
     
     .submit-btn:active {
-        transform: translateY(0);
+        transform: translateY(-1px);
+    }
+    
+    /* 強制所有 Streamlit 組件透明 */
+    [data-testid="stVerticalBlock"] {
+        background: transparent !important;
+    }
+    
+    [data-testid="column"] {
+        background: transparent !important;
+    }
+    
+    /* 去除 markdown 背景 */
+    .stMarkdown {
+        background: transparent !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 步驟 4：頁面內容 ---
+# --- 步驟 4：頁面內容 - 全部在星空之上 ---
 
 # 標題
 st.markdown('<div class="gradient-title">數據工作室</div>', unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 # 案例卡片
 case_url = "https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/"
@@ -331,16 +375,10 @@ case_html = f"""
 """
 st.markdown(case_html, unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
-
 # 聯絡表單
 st.markdown('<div class="contact-container">', unsafe_allow_html=True)
 
-col1, col2 = st.columns([1, 3])
-with col1:
-    st.write("")
-with col2:
-    st.markdown("### 聯絡我們")
+st.markdown("### 聯絡我們")
 
 # 表單 HTML
 form_html = """
@@ -354,7 +392,7 @@ form_html = """
         <input type="text" name="姓氏" placeholder="*姓氏" required>
     </div>
     <input type="email" name="email" placeholder="*Email" required style="width: 100%; margin-bottom: 20px;">
-    <textarea name="message" placeholder="備註 (選填)" rows="4" style="width: 100%; margin-bottom: 20px;"></textarea>
+    <textarea name="message" placeholder="備註 (選填)" rows="5" style="width: 100%; margin-bottom: 20px;"></textarea>
     <button type="submit" class="submit-btn">提交</button>
 </form>
 """
