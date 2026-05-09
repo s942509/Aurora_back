@@ -73,9 +73,14 @@ components.html(starfield_js, height=0)
 # --- 步驟 3：CSS 樣式設計 (漸層、光暈、半透明表單) ---
 st.markdown("""
 <style>
-    /* 全局背景透明處理 */
-    .stApp {
-        background: transparent;
+    /* 強制將所有 Streamlit 的容器設為透明 */
+    .stApp, .main, .block-container, [data-testid="stHeader"] {
+        background: transparent !important;
+    }
+
+    /* 確保文字與內容在透明背景上清晰可見 */
+    h1, h2, h3, p, span, label {
+        color: white !important;
     }
 
     /* 1. 漸層文字與漸出動畫 */
@@ -87,6 +92,7 @@ st.markdown("""
         font-size: 70px;
         font-weight: bold;
         text-align: center;
+        /* 使用你提供的圖二顏色 */
         background: linear-gradient(to right, #FFABAB, #83C9FF, #0068C9);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -106,7 +112,7 @@ st.markdown("""
     }
     .case-card:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 25px 10px rgba(131, 201, 255, 0.5);
+        box-shadow: 0 0 25px 15px rgba(131, 201, 255, 0.4);
     }
     .overlay-text {
         position: absolute;
@@ -117,24 +123,24 @@ st.markdown("""
         font-weight: bold;
         opacity: 0;
         transition: 0.3s;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     }
     .case-card:hover .overlay-text {
         opacity: 1;
     }
     .case-card:hover img {
-        filter: brightness(0.5) blur(2px);
+        filter: brightness(0.4) blur(2px);
     }
 
     /* 3. 半透明聯絡區域 */
     .contact-container {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.1) !important;
         backdrop-filter: blur(15px);
         padding: 40px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         margin: 100px auto;
         max-width: 900px;
-        color: white;
     }
 </style>
 """, unsafe_allow_html=True)
