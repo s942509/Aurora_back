@@ -8,8 +8,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 步驟 2：Particles.js 動畫 HTML ---
-particles_js_html = """<!DOCTYPE html>
+# --- 步驟 2：完整的背景 + 粒子動畫組合 HTML ---
+background_with_particles = """
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,7 @@ particles_js_html = """<!DOCTYPE html>
         
         body {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
             overflow: hidden;
         }
@@ -36,22 +37,17 @@ particles_js_html = """<!DOCTYPE html>
             left: 0;
             z-index: 1;
         }
-        
-        .content {
-            position: relative;
-            z-index: 2;
-            color: white;
-        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
+    
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         particlesJS("particles-js", {
             "particles": {
                 "number": {
-                    "value": 250,
+                    "value": 280,
                     "density": {
                         "enable": true,
                         "value_area": 800
@@ -65,44 +61,27 @@ particles_js_html = """<!DOCTYPE html>
                 },
                 "opacity": {
                     "value": 0.6,
-                    "random": false,
-                    "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
+                    "random": false
                 },
                 "size": {
-                    "value": 2,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 40,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
+                    "value": 2.5,
+                    "random": true
                 },
                 "line_linked": {
                     "enable": true,
-                    "distance": 120,
+                    "distance": 130,
                     "color": "#83c9ff",
-                    "opacity": 0.25,
+                    "opacity": 0.28,
                     "width": 1.5
                 },
                 "move": {
                     "enable": true,
-                    "speed": 0.3,
+                    "speed": 0.25,
                     "direction": "none",
                     "random": false,
                     "straight": false,
                     "out_mode": "out",
-                    "bounce": true,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
+                    "bounce": true
                 }
             },
             "interactivity": {
@@ -120,27 +99,14 @@ particles_js_html = """<!DOCTYPE html>
                 },
                 "modes": {
                     "grab": {
-                        "distance": 150,
+                        "distance": 140,
                         "line_linked": {
                             "opacity": 1
                         }
                     },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
                     "repulse": {
-                        "distance": 250,
-                        "duration": 0.6
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
+                        "distance": 220,
+                        "duration": 0.5
                     }
                 }
             },
@@ -151,8 +117,8 @@ particles_js_html = """<!DOCTYPE html>
 </html>
 """
 
-# 注入粒子動畫背景
-components.html(particles_js_html, height=0, scrolling=False)
+# 注入背景 + 粒子動畫
+components.html(background_with_particles, height=1200, scrolling=False)
 
 # --- 步驟 3：全局 CSS 樣式 ---
 st.markdown("""
@@ -168,10 +134,13 @@ st.markdown("""
     
     .block-container {
         background: transparent !important;
+        z-index: 10 !important;
+        position: relative;
     }
     
     [data-testid="stHeader"] {
         background: transparent !important;
+        z-index: 100 !important;
     }
     
     [data-testid="stToolbar"] {
@@ -201,8 +170,7 @@ st.markdown("""
         letter-spacing: 2px;
         position: relative;
         z-index: 10;
-        text-shadow: 0 0 20px rgba(131, 201, 255, 0.3);
-        filter: drop-shadow(0 0 10px rgba(131, 201, 255, 0.2));
+        filter: drop-shadow(0 0 20px rgba(131, 201, 255, 0.4));
     }
     
     /* 案例卡片容器 */
@@ -220,14 +188,14 @@ st.markdown("""
         height: 250px;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .case-card:hover {
         transform: scale(1.08) translateY(-10px);
-        box-shadow: 0 15px 40px rgba(131, 201, 255, 0.6);
+        box-shadow: 0 20px 50px rgba(131, 201, 255, 0.7);
     }
     
     .case-card img {
@@ -269,7 +237,7 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.15);
         margin: 60px auto;
         max-width: 900px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         position: relative;
         z-index: 10;
     }
@@ -303,8 +271,8 @@ st.markdown("""
     input[type="email"]:focus,
     textarea:focus {
         background: rgba(255, 255, 255, 0.18) !important;
-        border-color: rgba(131, 201, 255, 0.5) !important;
-        box-shadow: 0 0 15px rgba(131, 201, 255, 0.3) !important;
+        border-color: rgba(131, 201, 255, 0.6) !important;
+        box-shadow: 0 0 20px rgba(131, 201, 255, 0.3) !important;
         outline: none;
     }
     
@@ -326,12 +294,12 @@ st.markdown("""
         font-weight: bold !important;
         cursor: pointer !important;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 104, 201, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 104, 201, 0.5);
     }
     
     .submit-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(0, 104, 201, 0.6);
+        box-shadow: 0 8px 30px rgba(0, 104, 201, 0.7);
     }
     
     .submit-btn:active {
