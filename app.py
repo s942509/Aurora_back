@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # --- 步驟 1：基礎設定 ---
 st.set_page_config(
@@ -8,102 +7,28 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 步驟 2：注入背景 HTML (必須在最前面) ---
-background_html = """
-<!DOCTYPE html>
-<html>
-<head>
+# --- 步驟 2：全局 CSS - 星空背景 ---
+st.markdown("""
 <style>
+    /* 重置所有邊距 */
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
     
+    /* HTML 和 Body 背景 */
     html, body {
-        width: 100%;
-        height: 100%;
-        background: #000814;
-        overflow: hidden;
+        background: #0a0e27 !important;
     }
     
-    /* 星空背景 - 使用 canvas 動畫 */
-    #starfield {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-    }
-</style>
-</head>
-<body>
-    <canvas id="starfield"></canvas>
-    <script>
-        // 星空背景動畫
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        let stars = [];
-        const starCount = 200;
-        
-        // 初始化星星
-        for (let i = 0; i < starCount; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5,
-                opacity: Math.random() * 0.5 + 0.5,
-                twinkleSpeed: Math.random() * 0.02 + 0.01
-            });
-        }
-        
-        function drawStars() {
-            // 清除背景
-            ctx.fillStyle = '#000814';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // 繪製星星
-            stars.forEach(star => {
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // 閃爍效果
-                star.opacity += star.twinkleSpeed;
-                if (star.opacity > 1 || star.opacity < 0.3) {
-                    star.twinkleSpeed *= -1;
-                }
-            });
-            
-            requestAnimationFrame(drawStars);
-        }
-        
-        // 響應式調整
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-        
-        drawStars();
-    </script>
-</body>
-</html>
-"""
-
-components.html(background_html, height=0, scrolling=False)
-
-# --- 步驟 3：全局 CSS 樣式 ---
-st.markdown("""
-<style>
-    /* 強制透明背景 */
+    /* Streamlit 主容器背景 - 星空圖片 */
     .stApp {
-        background: transparent !important;
+        background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&h=1080&fit=crop') !important;
+        background-attachment: fixed !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
     }
     
     .main {
@@ -122,13 +47,26 @@ st.markdown("""
         background: transparent !important;
     }
     
-    /* 所有文字顏色設為白色 */
-    h1, h2, h3, h4, h5, h6 {
-        color: #ffffff !important;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    /* 隱藏側邊欄 */
+    [data-testid="stSidebarContent"] {
+        display: none !important;
     }
     
-    p, span, label, div {
+    /* 背景深色覆蓋層 - 提高文字可讀性 */
+    .stApp::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    /* 所有文字顏色 */
+    h1, h2, h3, h4, h5, h6, p, span, label, div {
         color: #ffffff !important;
     }
     
@@ -143,6 +81,9 @@ st.markdown("""
         background-clip: text;
         margin: 50px 0;
         letter-spacing: 2px;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 20px rgba(131, 201, 255, 0.3);
     }
     
     /* 案例卡片容器 */
@@ -150,6 +91,8 @@ st.markdown("""
         display: flex;
         justify-content: center;
         margin: 50px 0;
+        position: relative;
+        z-index: 1;
     }
     
     .case-card {
@@ -208,6 +151,8 @@ st.markdown("""
         margin: 60px auto;
         max-width: 900px;
         box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        position: relative;
+        z-index: 1;
     }
     
     .contact-container h2 {
@@ -276,7 +221,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 步驟 4：頁面內容 ---
+# --- 步驟 3：頁面內容 ---
 
 # 標題
 st.markdown('<div class="gradient-title">數據工作室</div>', unsafe_allow_html=True)
