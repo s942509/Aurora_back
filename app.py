@@ -2,61 +2,136 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # --- 步驟 1：基礎設定 ---
-st.set_page_config(page_title="數據工作室 | Data Studio", layout="wide")
+st.set_page_config(
+    page_title="數據工作室 | Data Studio", 
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
-# --- 步驟 2：Globe.gl 宇宙背景腳本 ---
-# 我們使用 Globe.gl 的背景繪製能力，但「不渲染地球」，只渲染星空並讓它旋轉
-starfield_js = """
-<div id="globeViz"></div>
-<script src="//unpkg.com/globe.gl"></script>
-<script>
-    const world = Globe()
-      (document.getElementById('globeViz'))
-      .backgroundColor('rgba(0,0,0,0)') // 背景透明
-      .showGlobe(false) // 隱藏地球
-      .showAtmosphere(false) // 隱藏大氣層
-      .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png');
-
-    // 開啟自動旋轉，產生星空流動感
-    world.controls().autoRotate = true;
-    world.controls().autoRotateSpeed = 0.3; 
-</script>
-<style> 
-    * { margin: 0; padding: 0; }
-    body { background: #000; overflow: hidden; } 
-    #globeViz { 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100vw; 
-        height: 100vh; 
-        z-index: 1;
+# --- 步驟 2：注入背景 HTML (必須在最前面) ---
+background_html = """
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        width: 100%;
+        height: 100%;
+        background: #000814;
+        overflow: hidden;
+    }
+    
+    /* 星空背景 - 使用 canvas 動畫 */
+    #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
     }
 </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <script>
+        // 星空背景動畫
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let stars = [];
+        const starCount = 200;
+        
+        // 初始化星星
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5,
+                opacity: Math.random() * 0.5 + 0.5,
+                twinkleSpeed: Math.random() * 0.02 + 0.01
+            });
+        }
+        
+        function drawStars() {
+            // 清除背景
+            ctx.fillStyle = '#000814';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 繪製星星
+            stars.forEach(star => {
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 閃爍效果
+                star.opacity += star.twinkleSpeed;
+                if (star.opacity > 1 || star.opacity < 0.3) {
+                    star.twinkleSpeed *= -1;
+                }
+            });
+            
+            requestAnimationFrame(drawStars);
+        }
+        
+        // 響應式調整
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        drawStars();
+    </script>
+</body>
+</html>
 """
 
-# 注入背景（設定高度為視口高度）
-components.html(starfield_js, height=700)
+components.html(background_html, height=0, scrolling=False)
 
-# --- 步驟 3：CSS 樣式設計 (確保透明與文字樣式) ---
+# --- 步驟 3：全局 CSS 樣式 ---
 st.markdown("""
 <style>
-    /* 強制透明層級與位置定位 */
-    .stApp, .main, .block-container {
+    /* 強制透明背景 */
+    .stApp {
         background: transparent !important;
-        position: relative;
-        z-index: 2;
     }
-
+    
+    .main {
+        background: transparent !important;
+    }
+    
+    .block-container {
+        background: transparent !important;
+    }
+    
     [data-testid="stHeader"] {
         background: transparent !important;
-        z-index: 10;
     }
-
-    h1, h2, h3, p, span, label, div {
-        color: white !important;
+    
+    [data-testid="stToolbar"] {
+        background: transparent !important;
     }
-
+    
+    /* 所有文字顏色設為白色 */
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    p, span, label, div {
+        color: #ffffff !important;
+    }
+    
     /* 漸層大標題 */
     .gradient-title {
         font-size: 70px;
@@ -65,76 +140,158 @@ st.markdown("""
         background: linear-gradient(to right, #FFABAB, #83C9FF, #0068C9);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin: 50px 0;
+        letter-spacing: 2px;
     }
-
-    /* 縮圖卡片設定 */
+    
+    /* 案例卡片容器 */
     .case-container {
         display: flex;
         justify-content: center;
-        margin-bottom: 50px;
+        margin: 50px 0;
     }
+    
     .case-card {
         position: relative;
-        width:10%; /* 這裡調整縮圖大小 */
-        border-radius: 15px;
+        width: 250px;
+        height: 250px;
+        border-radius: 20px;
         overflow: hidden;
-        transition: 0.4s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    
     .case-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 30px 10px rgba(131, 201, 255, 0.6);
+        transform: scale(1.08) translateY(-10px);
+        box-shadow: 0 15px 40px rgba(131, 201, 255, 0.4);
     }
+    
     .case-card img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
         display: block;
-        transition: 0.3s;
+        transition: filter 0.3s ease;
     }
+    
     .overlay-text {
         position: absolute;
-        top: 50%; left: 50%;
+        top: 50%;
+        left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 22px; /* 這裡調整「參考案例」字體大小 */
+        font-size: 24px;
         font-weight: bold;
+        color: white;
         opacity: 0;
-        transition: 0.3s;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+        transition: opacity 0.3s ease;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        z-index: 10;
     }
+    
     .case-card:hover .overlay-text {
         opacity: 1;
     }
+    
     .case-card:hover img {
-        filter: brightness(0.3) blur(2px);
+        filter: brightness(0.4) blur(3px);
     }
-
-    /* 聯絡區塊 */
+    
+    /* 聯絡表單區塊 */
     .contact-container {
         background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(15px);
-        padding: 40px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 50px auto;
-        max-width: 800px;
+        backdrop-filter: blur(20px);
+        padding: 50px;
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        margin: 60px auto;
+        max-width: 900px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    
+    .contact-container h2 {
+        color: white !important;
+        margin-bottom: 30px;
+    }
+    
+    /* 表單輸入框 */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        padding: 14px 18px !important;
+        border-radius: 10px !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        color: white !important;
+        font-size: 14px !important;
+        transition: all 0.3s ease;
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+        background: rgba(255, 255, 255, 0.18) !important;
+        border-color: rgba(131, 201, 255, 0.5) !important;
+        box-shadow: 0 0 15px rgba(131, 201, 255, 0.2) !important;
+        outline: none;
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+    
+    /* 提交按鈕 */
+    .submit-btn {
+        width: 100%;
+        padding: 16px !important;
+        margin-top: 20px;
+        border-radius: 10px !important;
+        border: none !important;
+        background: linear-gradient(135deg, #0068C9, #0054a8) !important;
+        color: white !important;
+        font-size: 18px !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 104, 201, 0.3);
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0, 104, 201, 0.5);
+    }
+    
+    .submit-btn:active {
+        transform: translateY(0);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 步驟 4：內容渲染 ---
+# --- 步驟 4：頁面內容 ---
 
+# 標題
 st.markdown('<div class="gradient-title">數據工作室</div>', unsafe_allow_html=True)
 
-# 案例圖片與連結
+st.markdown("<br>", unsafe_allow_html=True)
+
+# 案例卡片
 case_url = "https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/"
 demo_img = "https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true"
 
 case_html = f"""
 <div class="case-container">
-    <a href="{case_url}" target="_blank">
+    <a href="{case_url}" target="_blank" style="text-decoration: none;">
         <div class="case-card">
-            <img src="{demo_img}">
+            <img src="{demo_img}" alt="參考案例" loading="lazy">
             <div class="overlay-text">參考案例</div>
         </div>
     </a>
@@ -142,21 +299,35 @@ case_html = f"""
 """
 st.markdown(case_html, unsafe_allow_html=True)
 
+st.markdown("<br>", unsafe_allow_html=True)
+
 # 聯絡表單
 st.markdown('<div class="contact-container">', unsafe_allow_html=True)
-st.subheader("聯絡我們")
+
+col1, col2 = st.columns([1, 3])
+with col1:
+    st.write("")
+with col2:
+    st.markdown("### 聯絡我們")
+
+# 表單 HTML
 form_html = """
 <form action="https://formsubmit.co/s942509@gmail.com" method="POST">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <input type="text" name="統一編號" placeholder="*統一編號" required style="padding:12px; border-radius:5px; border:none; background:rgba(255,255,255,0.15); color:white;">
-        <input type="text" name="公司名稱" placeholder="*公司名稱" required style="padding:12px; border-radius:5px; border:none; background:rgba(255,255,255,0.15); color:white;">
-        <input type="text" name="部門" placeholder="*部門" required style="padding:12px; border-radius:5px; border:none; background:rgba(255,255,255,0.15); color:white;">
-        <input type="text" name="職稱" placeholder="*職稱" required style="padding:12px; border-radius:5px; border:none; background:rgba(255,255,255,0.15); color:white;">
-        <input type="text" name="名字" placeholder="*名字" required style="padding:12px; border-radius:5px; border:none; background:rgba(255,255,255,0.15); color:white;">
-        <input type="text" name="姓氏" placeholder="*姓氏" required style="padding:12px; border-radius:5px; border:none; background:rgba(255,255,255,0.15); color:white;">
+    <div class="form-grid">
+        <input type="text" name="統一編號" placeholder="*統一編號" required>
+        <input type="text" name="公司名稱" placeholder="*公司名稱" required>
+        <input type="text" name="部門" placeholder="*部門" required>
+        <input type="text" name="職稱" placeholder="*職稱" required>
+        <input type="text" name="名字" placeholder="*名字" required>
+        <input type="text" name="姓氏" placeholder="*姓氏" required>
     </div>
-    <button type="submit" style="width:100%; margin-top:20px; padding:15px; border-radius:5px; border:none; background:#0068C9; color:white; font-size:18px; font-weight:bold; cursor:pointer;">Submit</button>
+    <input type="email" name="email" placeholder="*Email" required style="width: 100%; margin-bottom: 20px;">
+    <textarea name="message" placeholder="備註 (選填)" rows="4" style="width: 100%; margin-bottom: 20px;"></textarea>
+    <button type="submit" class="submit-btn">提交</button>
 </form>
 """
+
 st.markdown(form_html, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown("<br><br>", unsafe_allow_html=True)
