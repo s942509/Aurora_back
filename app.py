@@ -22,20 +22,35 @@ starfield_js = """
     world.controls().autoRotateSpeed = 0.3; 
 </script>
 <style> 
-    body { margin: 0; background: #000; overflow: hidden; } 
-    #globeViz { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+    * { margin: 0; padding: 0; }
+    body { background: #000; overflow: hidden; } 
+    #globeViz { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100vw; 
+        height: 100vh; 
+        z-index: 1;
+    }
 </style>
 """
 
-# 注入背景
-components.html(starfield_js, height=0)
+# 注入背景（設定高度為視口高度）
+components.html(starfield_js, height=700)
 
 # --- 步驟 3：CSS 樣式設計 (確保透明與文字樣式) ---
 st.markdown("""
 <style>
-    /* 強制透明層級 */
-    .stApp, .main, .block-container, [data-testid="stHeader"] {
+    /* 強制透明層級與位置定位 */
+    .stApp, .main, .block-container {
         background: transparent !important;
+        position: relative;
+        z-index: 2;
+    }
+
+    [data-testid="stHeader"] {
+        background: transparent !important;
+        z-index: 10;
     }
 
     h1, h2, h3, p, span, label, div {
