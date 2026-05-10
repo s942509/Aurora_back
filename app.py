@@ -7,12 +7,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 隱藏 Streamlit 的 UI 元素但保留滾動功能
+# 隱藏瀏覽器滾輪條，只用 Streamlit 滾動條
 st.markdown("""
 <style>
+    /* 隱藏瀏覽器滾輪條 */
+    html { overflow-y: hidden !important; }
+    
     /* 基本重置 */
     * { box-sizing: border-box; }
-    html, body { 
+    body { 
         margin: 0 !important; 
         padding: 0 !important; 
         width: 100% !important;
@@ -47,14 +50,14 @@ st.markdown("""
         width: 100% !important;
     }
     
-    /* 隱藏邊框 */
+    /* 隱藏邊框和空白 */
     [data-testid="stDecoratedObject"] {
         border: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
     
-    /* iframe 無邊框 */
+    /* iframe 無邊框無邊距 */
     iframe { 
         border: none !important;
         margin: 0 !important;
@@ -62,7 +65,7 @@ st.markdown("""
         width: 100% !important;
     }
     
-    /* 保留滾動條 - 美化它 */
+    /* 美化 Streamlit 滾動條 */
     .main::-webkit-scrollbar { 
         width: 12px !important; 
     }
@@ -80,6 +83,12 @@ st.markdown("""
     /* 隱藏 markdown 背景 */
     [data-testid="stMarkdownContainer"] { 
         background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* 移除所有頂部和底部空白 */
+    .stVerticalBlock {
         padding: 0 !important;
         margin: 0 !important;
     }
