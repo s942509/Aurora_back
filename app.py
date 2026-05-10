@@ -16,6 +16,8 @@ st.markdown("""
         margin: 0 !important;
         padding: 0 !important;
         height: 100% !important;
+        width: 100% !important;
+        background: transparent !important;
     }
     
     body {
@@ -23,6 +25,7 @@ st.markdown("""
         margin: 0 !important;
         padding: 0 !important;
         height: 100% !important;
+        width: 100% !important;
         background: transparent !important;
     }
     
@@ -41,18 +44,32 @@ st.markdown("""
         display: none !important;
     }
     
-    /* ===== Streamlit 容器透明化 ===== */
-    .stApp,
-    .main,
+    /* ===== Streamlit 容器透明化 - 最關鍵 ===== */
+    .stApp {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+    
+    .main {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        overflow-y: auto !important;
+        width: 100% !important;
+    }
+    
     .block-container {
         background: transparent !important;
         margin: 0 !important;
         padding: 0 !important;
         border: none !important;
-    }
-    
-    .main {
-        overflow-y: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     /* ===== 移除所有裝飾元素 ===== */
@@ -109,22 +126,23 @@ html_content = """
             height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         
         #particles-js {
             position: fixed;
-            width: 100%;
+            width: calc(100% - 12px);
             height: 100%;
             top: 0;
             left: 0;
             z-index: 0;
+            right: 0;
         }
         
         .content {
             position: relative;
             z-index: 10;
-            width: 100%;
+            width: calc(100% - 12px);
             min-height: 100vh;
         }
         
