@@ -337,9 +337,9 @@ html_content = """
                     "value": 0.6,
                     "random": false,
                     "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
+                        "enable": true,
+                        "speed": 2,
+                        "opacity_min": 0.2,
                         "sync": false
                     }
                 },
@@ -347,8 +347,8 @@ html_content = """
                     "value": 2.5,
                     "random": true,
                     "anim": {
-                        "enable": false,
-                        "speed": 40,
+                        "enable": true,
+                        "speed": 20,
                         "size_min": 0.1,
                         "sync": false
                     }
