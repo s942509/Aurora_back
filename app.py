@@ -7,62 +7,30 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 粒子動畫背景
-particles_html = """<!DOCTYPE html>
-<html>
-<head>
-<style>
-    * { margin: 0; padding: 0; }
-    body { background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%); }
-    #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; }
-</style>
-</head>
-<body>
-    <div id="particles-js"></div>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        particlesJS("particles-js", {
-            "particles": {
-                "number": {"value": 280, "density": {"enable": true, "value_area": 800}},
-                "color": {"value": "#ffffff"},
-                "shape": {"type": "circle"},
-                "opacity": {"value": 0.6, "random": false},
-                "size": {"value": 2.5, "random": true},
-                "line_linked": {"enable": true, "distance": 130, "color": "#83c9ff", "opacity": 0.28, "width": 1.5},
-                "move": {"enable": true, "speed": 0.25, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": true}
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {"enable": true, "mode": "grab"},
-                    "onclick": {"enable": true, "mode": "repulse"}
-                },
-                "modes": {
-                    "grab": {"distance": 140, "line_linked": {"opacity": 1}},
-                    "repulse": {"distance": 220, "duration": 0.5}
-                }
-            },
-            "retina_detect": true
-        });
-    </script>
-</body>
-</html>
-"""
-
-components.html(particles_html, height=1000, scrolling=False)
-
-# CSS 樣式
+# 全局 CSS - 先設定背景
 st.markdown("""
 <style>
-    .stApp { background: transparent !important; }
+    /* 最重要：讓 body 和 html 透明 */
+    html { background: transparent !important; }
+    body { background: transparent !important; }
+    
+    /* Streamlit 容器透明 */
+    .stApp { 
+        background: transparent !important;
+        position: relative;
+        z-index: 100;
+    }
+    
     .main { background: transparent !important; }
-    .block-container { background: transparent !important; z-index: 100 !important; }
+    .block-container { background: transparent !important; }
     [data-testid="stHeader"] { background: transparent !important; }
     [data-testid="stToolbar"] { background: transparent !important; }
     [data-testid="stSidebarContent"] { display: none !important; }
     
+    /* 文字顏色 */
     h1, h2, h3, p, span, label, div { color: #ffffff !important; }
     
+    /* 漸層標題 */
     .gradient-title {
         font-size: 70px;
         font-weight: bold;
@@ -76,6 +44,7 @@ st.markdown("""
         filter: drop-shadow(0 0 30px rgba(131, 201, 255, 0.6));
     }
     
+    /* 卡片 */
     .case-container {
         display: flex;
         justify-content: center;
@@ -122,6 +91,7 @@ st.markdown("""
     .case-card:hover .overlay-text { opacity: 1; }
     .case-card:hover img { filter: brightness(0.3) blur(3px); }
     
+    /* 表單 */
     .contact-container {
         background: rgba(10, 14, 39, 0.4) !important;
         backdrop-filter: blur(30px);
@@ -180,7 +150,64 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 內容
+# 粒子動畫背景 - 用 iframe 的方式讓它完全獨立
+particles_html = """
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    * { margin: 0; padding: 0; }
+    html, body { 
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+    }
+    #particles-js { 
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+</style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {"value": 280, "density": {"enable": true, "value_area": 800}},
+                "color": {"value": "#ffffff"},
+                "shape": {"type": "circle"},
+                "opacity": {"value": 0.6, "random": false},
+                "size": {"value": 2.5, "random": true},
+                "line_linked": {"enable": true, "distance": 130, "color": "#83c9ff", "opacity": 0.28, "width": 1.5},
+                "move": {"enable": true, "speed": 0.25, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": true}
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {"enable": true, "mode": "grab"},
+                    "onclick": {"enable": true, "mode": "repulse"}
+                },
+                "modes": {
+                    "grab": {"distance": 140, "line_linked": {"opacity": 1}},
+                    "repulse": {"distance": 220, "duration": 0.5}
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>
+"""
+
+# 注入為固定背景
+components.html(particles_html, height=0, scrolling=False)
+
+# 頁面內容
 st.markdown('<div class="gradient-title">數據工作室</div>', unsafe_allow_html=True)
 
 case_url = "https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/"
