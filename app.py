@@ -7,34 +7,77 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 隱藏所有 Streamlit UI 元素
+# 隱藏所有 Streamlit UI 元素和邊框
 st.markdown("""
 <style>
-    /* 隱藏 Streamlit 的所有 UI 元素 */
-    [data-testid="stHeaderActionItems"] { display: none; }
-    [data-testid="stHeader"] { display: none; }
-    [data-testid="stToolbar"] { display: none; }
-    [data-testid="stSidebarContent"] { display: none; }
+    /* 基本重置 */
+    * { box-sizing: border-box; }
+    html, body { 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        width: 100% !important;
+        height: 100% !important;
+        background: transparent !important;
+    }
     
-    /* 隱藏主容器邊框和滾動條 */
-    .main { background: transparent !important; }
-    .stApp { background: transparent !important; }
+    /* 隱藏 Streamlit 的所有 UI 元素 */
+    [data-testid="stHeaderActionItems"] { display: none !important; }
+    [data-testid="stHeader"] { display: none !important; }
+    [data-testid="stToolbar"] { display: none !important; }
+    [data-testid="stSidebarContent"] { display: none !important; }
+    
+    /* 隱藏所有 Streamlit 容器 */
+    .main { 
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .stApp { 
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
     .block-container { 
         background: transparent !important;
         max-width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
+        width: 100% !important;
     }
     
-    /* 隱藏 iframe 邊框 */
-    iframe { border: none !important; }
+    /* 隱藏所有邊框和邊距 */
+    [data-testid="stDecoratedObject"] {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
     
-    /* 隱藏所有滾動條 */
-    ::-webkit-scrollbar { display: none; }
-    html { -ms-overflow-style: none; overflow-y: scroll; }
+    /* iframe 容器 */
+    iframe { 
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* 隱藏所有滾動條 - 除了瀏覽器自己的 */
+    .main::-webkit-scrollbar { width: 0 !important; }
+    .block-container::-webkit-scrollbar { width: 0 !important; }
+    .stApp::-webkit-scrollbar { width: 0 !important; }
     
     /* 隱藏 markdown 背景 */
-    [data-testid="stMarkdownContainer"] { background: transparent !important; }
+    [data-testid="stMarkdownContainer"] { 
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Streamlit 的內部滾動條 */
+    div[data-testid="stMainBlockContainer"] {
+        overflow: hidden !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
