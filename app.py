@@ -27,11 +27,12 @@ html_content = """
         
         #particles-js {
             position: fixed;
-            width: 100%;
+            width: calc(100% - 12px);
             height: 100%;
             top: 0;
             left: 0;
             z-index: 0;
+            right: 0;
         }
         
         .content {
