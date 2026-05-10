@@ -7,7 +7,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 隱藏所有 Streamlit UI 元素和邊框
+# 隱藏 Streamlit 的 UI 元素但保留滾動功能
 st.markdown("""
 <style>
     /* 基本重置 */
@@ -16,21 +16,21 @@ st.markdown("""
         margin: 0 !important; 
         padding: 0 !important; 
         width: 100% !important;
-        height: 100% !important;
         background: transparent !important;
     }
     
-    /* 隱藏 Streamlit 的所有 UI 元素 */
+    /* 隱藏 Streamlit 的 UI 元素 */
     [data-testid="stHeaderActionItems"] { display: none !important; }
     [data-testid="stHeader"] { display: none !important; }
     [data-testid="stToolbar"] { display: none !important; }
     [data-testid="stSidebarContent"] { display: none !important; }
     
-    /* 隱藏所有 Streamlit 容器 */
+    /* Streamlit 容器 - 透明但保留滾動 */
     .main { 
         background: transparent !important;
         margin: 0 !important;
         padding: 0 !important;
+        overflow-y: auto !important;
     }
     
     .stApp { 
@@ -47,14 +47,14 @@ st.markdown("""
         width: 100% !important;
     }
     
-    /* 隱藏所有邊框和邊距 */
+    /* 隱藏邊框 */
     [data-testid="stDecoratedObject"] {
         border: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
     
-    /* iframe 容器 */
+    /* iframe 無邊框 */
     iframe { 
         border: none !important;
         margin: 0 !important;
@@ -62,21 +62,26 @@ st.markdown("""
         width: 100% !important;
     }
     
-    /* 隱藏所有滾動條 - 除了瀏覽器自己的 */
-    .main::-webkit-scrollbar { width: 0 !important; }
-    .block-container::-webkit-scrollbar { width: 0 !important; }
-    .stApp::-webkit-scrollbar { width: 0 !important; }
+    /* 保留滾動條 - 美化它 */
+    .main::-webkit-scrollbar { 
+        width: 12px !important; 
+    }
+    .main::-webkit-scrollbar-track { 
+        background: rgba(10, 14, 39, 0.2) !important; 
+    }
+    .main::-webkit-scrollbar-thumb { 
+        background: rgba(131, 201, 255, 0.4) !important;
+        border-radius: 6px !important;
+    }
+    .main::-webkit-scrollbar-thumb:hover { 
+        background: rgba(131, 201, 255, 0.7) !important;
+    }
     
     /* 隱藏 markdown 背景 */
     [data-testid="stMarkdownContainer"] { 
         background: transparent !important;
         padding: 0 !important;
         margin: 0 !important;
-    }
-    
-    /* Streamlit 的內部滾動條 */
-    div[data-testid="stMainBlockContainer"] {
-        overflow: hidden !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -390,4 +395,4 @@ html_content = """
 </html>
 """
 
-components.html(html_content, height=3000, scrolling=True)
+components.html(html_content, height=1200, scrolling=True)
