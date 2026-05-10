@@ -38,7 +38,7 @@ html_content = """
         .content {
             position: relative;
             z-index: 10;
-            width: 100%;
+            width: calc(100% - 12px);
         }
         
         .gradient-title {
