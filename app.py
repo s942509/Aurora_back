@@ -7,90 +7,89 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 隱藏瀏覽器滾輪條，只用 Streamlit 滾動條
+# 完全隱藏瀏覽器滾輪條和邊界
 st.markdown("""
 <style>
-    /* 隱藏瀏覽器滾輪條 */
-    html { overflow-y: hidden !important; }
+    /* ===== 最高優先級：隱藏瀏覽器滾輪條 ===== */
+    html {
+        overflow-y: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+    }
     
-    /* 基本重置 */
-    * { box-sizing: border-box; }
-    body { 
-        margin: 0 !important; 
-        padding: 0 !important; 
-        width: 100% !important;
+    body {
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
         background: transparent !important;
     }
     
-    /* 隱藏 Streamlit 的 UI 元素 */
-    [data-testid="stHeaderActionItems"] { display: none !important; }
-    [data-testid="stHeader"] { display: none !important; }
-    [data-testid="stToolbar"] { display: none !important; }
-    [data-testid="stSidebarContent"] { display: none !important; }
+    /* ===== 重置所有預設邊距 ===== */
+    * {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
     
-    /* Streamlit 容器 - 透明但保留滾動 */
-    .main { 
+    /* ===== 隱藏 Streamlit UI ===== */
+    [data-testid="stHeaderActionItems"],
+    [data-testid="stHeader"],
+    [data-testid="stToolbar"],
+    [data-testid="stSidebarContent"] {
+        display: none !important;
+    }
+    
+    /* ===== Streamlit 容器透明化 ===== */
+    .stApp,
+    .main,
+    .block-container {
         background: transparent !important;
         margin: 0 !important;
         padding: 0 !important;
+        border: none !important;
+    }
+    
+    .main {
         overflow-y: auto !important;
     }
     
-    .stApp { 
-        background: transparent !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .block-container { 
-        background: transparent !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
-    }
-    
-    /* 隱藏邊框和空白 */
-    [data-testid="stDecoratedObject"] {
+    /* ===== 移除所有裝飾元素 ===== */
+    [data-testid="stDecoratedObject"],
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stVerticalBlock"],
+    .streamlit-container {
         border: none !important;
         padding: 0 !important;
         margin: 0 !important;
+        background: transparent !important;
     }
     
-    /* iframe 無邊框無邊距 */
-    iframe { 
+    /* ===== iframe 處理 ===== */
+    iframe {
         border: none !important;
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
     }
     
-    /* 美化 Streamlit 滾動條 */
-    .main::-webkit-scrollbar { 
-        width: 12px !important; 
+    /* ===== 美化 Streamlit 滾輪條 ===== */
+    .main::-webkit-scrollbar {
+        width: 12px !important;
     }
-    .main::-webkit-scrollbar-track { 
-        background: rgba(10, 14, 39, 0.2) !important; 
+    
+    .main::-webkit-scrollbar-track {
+        background: rgba(10, 14, 39, 0.1) !important;
     }
-    .main::-webkit-scrollbar-thumb { 
-        background: rgba(131, 201, 255, 0.4) !important;
+    
+    .main::-webkit-scrollbar-thumb {
+        background: rgba(131, 201, 255, 0.5) !important;
         border-radius: 6px !important;
     }
-    .main::-webkit-scrollbar-thumb:hover { 
-        background: rgba(131, 201, 255, 0.7) !important;
-    }
     
-    /* 隱藏 markdown 背景 */
-    [data-testid="stMarkdownContainer"] { 
-        background: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    /* 移除所有頂部和底部空白 */
-    .stVerticalBlock {
-        padding: 0 !important;
-        margin: 0 !important;
+    .main::-webkit-scrollbar-thumb:hover {
+        background: rgba(131, 201, 255, 0.8) !important;
     }
 </style>
 """, unsafe_allow_html=True)
