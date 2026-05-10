@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="數據工作室 | Data Studio", 
@@ -6,14 +7,106 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 隱藏所有 Streamlit UI
+# 完全隱藏瀏覽器滾輪條和邊界
 st.markdown("""
 <style>
+    /* ===== 最高優先級：隱藏瀏覽器滾輪條 ===== */
+    html {
+        overflow-y: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        background: transparent !important;
+    }
+    
+    body {
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        background: transparent !important;
+    }
+    
+    /* ===== 重置所有預設邊距 ===== */
+    * {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* ===== 隱藏 Streamlit UI ===== */
     [data-testid="stHeaderActionItems"],
     [data-testid="stHeader"],
     [data-testid="stToolbar"],
     [data-testid="stSidebarContent"] {
         display: none !important;
+    }
+    
+    /* ===== Streamlit 容器透明化 - 最關鍵 ===== */
+    .stApp {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+    
+    .main {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        overflow-y: auto !important;
+        width: 100% !important;
+    }
+    
+    .block-container {
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* ===== 移除所有裝飾元素 ===== */
+    [data-testid="stDecoratedObject"],
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stVerticalBlock"],
+    .streamlit-container {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+    }
+    
+    /* ===== iframe 處理 ===== */
+    iframe {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* ===== 美化 Streamlit 滾輪條 ===== */
+    .main::-webkit-scrollbar {
+        width: 12px !important;
+    }
+    
+    .main::-webkit-scrollbar-track {
+        background: rgba(10, 14, 39, 0.1) !important;
+    }
+    
+    .main::-webkit-scrollbar-thumb {
+        background: rgba(131, 201, 255, 0.5) !important;
+        border-radius: 6px !important;
+    }
+    
+    .main::-webkit-scrollbar-thumb:hover {
+        background: rgba(131, 201, 255, 0.8) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -32,53 +125,25 @@ html_content = """
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             overflow: hidden;
         }
         
         #particles-js {
             position: fixed;
-            width: 100%;
+            width: calc(100% - 12px);
             height: 100%;
             top: 0;
             left: 0;
             z-index: 0;
-        }
-        
-        .scroll-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            z-index: 10;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(131, 201, 255, 0.5) rgba(10, 14, 39, 0.1);
-        }
-        
-        .scroll-container::-webkit-scrollbar {
-            width: 12px;
-        }
-        
-        .scroll-container::-webkit-scrollbar-track {
-            background: rgba(10, 14, 39, 0.1);
-        }
-        
-        .scroll-container::-webkit-scrollbar-thumb {
-            background: rgba(131, 201, 255, 0.5);
-            border-radius: 6px;
-        }
-        
-        .scroll-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(131, 201, 255, 0.8);
+            right: 0;
         }
         
         .content {
             position: relative;
             z-index: 10;
-            width: 100%;
+            width: calc(100% - 12px);
+            min-height: 100vh;
         }
         
         .gradient-title {
@@ -209,65 +274,144 @@ html_content = """
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(0, 104, 201, 0.8);
         }
+        
+        @media (max-width: 768px) {
+            .gradient-title { font-size: 48px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .contact-container { padding: 30px; }
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     
-    <div class="scroll-container">
-        <div class="content">
-            <div class="gradient-title">數據工作室</div>
-            
-            <div class="case-container">
-                <a href="https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/" target="_blank" style="text-decoration: none;">
-                    <div class="case-card">
-                        <img src="https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true" alt="參考案例">
-                        <div class="overlay-text">參考案例</div>
-                    </div>
-                </a>
-            </div>
-            
-            <div class="contact-container">
-                <h2>聯絡我們</h2>
-                <form action="https://formsubmit.co/s942509@gmail.com" method="POST">
-                    <div class="form-grid">
-                        <input type="text" name="統一編號" placeholder="*統一編號" required>
-                        <input type="text" name="公司名稱" placeholder="*公司名稱" required>
-                        <input type="text" name="部門" placeholder="*部門" required>
-                        <input type="text" name="職稱" placeholder="*職稱" required>
-                        <input type="text" name="名字" placeholder="*名字" required>
-                        <input type="text" name="姓氏" placeholder="*姓氏" required>
-                    </div>
-                    <input type="email" name="email" placeholder="*Email" required style="width: 100%; margin-bottom: 20px;">
-                    <textarea name="message" placeholder="備註 (選填)" rows="5" style="width: 100%; margin-bottom: 20px;"></textarea>
-                    <button type="submit" class="submit-btn">提交</button>
-                </form>
-            </div>
-            <br><br>
+    <div class="content">
+        <div class="gradient-title">數據工作室</div>
+        
+        <div class="case-container">
+            <a href="https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/" target="_blank" style="text-decoration: none;">
+                <div class="case-card">
+                    <img src="https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true" alt="參考案例">
+                    <div class="overlay-text">參考案例</div>
+                </div>
+            </a>
         </div>
+        
+        <div class="contact-container">
+            <h2>聯絡我們</h2>
+            <form action="https://formsubmit.co/s942509@gmail.com" method="POST">
+                <div class="form-grid">
+                    <input type="text" name="統一編號" placeholder="*統一編號" required>
+                    <input type="text" name="公司名稱" placeholder="*公司名稱" required>
+                    <input type="text" name="部門" placeholder="*部門" required>
+                    <input type="text" name="職稱" placeholder="*職稱" required>
+                    <input type="text" name="名字" placeholder="*名字" required>
+                    <input type="text" name="姓氏" placeholder="*姓氏" required>
+                </div>
+                <input type="email" name="email" placeholder="*Email" required style="width: 100%; margin-bottom: 20px;">
+                <textarea name="message" placeholder="備註 (選填)" rows="5" style="width: 100%; margin-bottom: 20px;"></textarea>
+                <button type="submit" class="submit-btn">提交</button>
+            </form>
+        </div>
+        <br><br>
     </div>
     
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 280, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.6, "random": false },
-                "size": { "value": 2.5, "random": true },
-                "line_linked": { "enable": true, "distance": 130, "color": "#83c9ff", "opacity": 0.28, "width": 1.5 },
-                "move": { "enable": true, "speed": 0.25, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": true }
+                "number": {
+                    "value": 280,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle"
+                },
+                "opacity": {
+                    "value": 0.6,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 2.5,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 130,
+                    "color": "#83c9ff",
+                    "opacity": 0.28,
+                    "width": 1.5
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 0.25,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": true,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
             },
             "interactivity": {
                 "detect_on": "canvas",
                 "events": {
-                    "onhover": { "enable": true, "mode": "grab" },
-                    "onclick": { "enable": true, "mode": "repulse" }
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "resize": true
                 },
                 "modes": {
-                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
-                    "repulse": { "distance": 220, "duration": 0.5 }
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 220,
+                        "duration": 0.5
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
                 }
             },
             "retina_detect": true
@@ -277,5 +421,4 @@ html_content = """
 </html>
 """
 
-import streamlit.components.v1 as components
-components.html(html_content, height=100, scrolling=False)
+components.html(html_content, height=4000, scrolling=True)
