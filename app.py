@@ -390,4 +390,4 @@ html_content = """
 </html>
 """
 
-components.html(html_content, height=1200, scrolling=True)
+components.html(html_content, height=2000, scrolling=True)
