@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="數據工作室 | Data Studio", 
@@ -6,7 +7,37 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 直接用 HTML 注入整個頁面 - 模仿 Exifa.net 的方式
+# 隱藏所有 Streamlit UI 元素
+st.markdown("""
+<style>
+    /* 隱藏 Streamlit 的所有 UI 元素 */
+    [data-testid="stHeaderActionItems"] { display: none; }
+    [data-testid="stHeader"] { display: none; }
+    [data-testid="stToolbar"] { display: none; }
+    [data-testid="stSidebarContent"] { display: none; }
+    
+    /* 隱藏主容器邊框和滾動條 */
+    .main { background: transparent !important; }
+    .stApp { background: transparent !important; }
+    .block-container { 
+        background: transparent !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* 隱藏 iframe 邊框 */
+    iframe { border: none !important; }
+    
+    /* 隱藏所有滾動條 */
+    ::-webkit-scrollbar { display: none; }
+    html { -ms-overflow-style: none; overflow-y: scroll; }
+    
+    /* 隱藏 markdown 背景 */
+    [data-testid="stMarkdownContainer"] { background: transparent !important; }
+</style>
+""", unsafe_allow_html=True)
+
 html_content = """
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -38,6 +69,7 @@ html_content = """
             position: relative;
             z-index: 10;
             width: 100%;
+            min-height: 100vh;
         }
         
         .gradient-title {
@@ -315,6 +347,4 @@ html_content = """
 </html>
 """
 
-# 用 Streamlit 的 components 注入整個 HTML
-import streamlit.components.v1 as components
 components.html(html_content, height=1200, scrolling=True)
