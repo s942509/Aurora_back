@@ -6,6 +6,16 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# 隱藏 Streamlit 邊界
+st.markdown("""
+<style>
+    iframe { border: none !important; margin: 0 !important; padding: 0 !important; }
+    .stApp { margin: 0 !important; padding: 0 !important; }
+    .main { margin: 0 !important; padding: 0 !important; }
+    .block-container { margin: 0 !important; padding: 0 !important; }
+</style>
+""", unsafe_allow_html=True)
+
 # 直接用 HTML 注入整個頁面 - 模仿 Exifa.net 的方式
 html_content = """
 <!DOCTYPE html>
@@ -27,18 +37,17 @@ html_content = """
         
         #particles-js {
             position: fixed;
-            width: calc(100% - 12px);
+            width: 100%;
             height: 100%;
             top: 0;
             left: 0;
             z-index: 0;
-            right: 0;
         }
         
         .content {
             position: relative;
             z-index: 10;
-            width: calc(100% - 12px);
+            width: 100%;
         }
         
         .gradient-title {
