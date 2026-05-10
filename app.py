@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="數據工作室 | Data Studio", 
@@ -7,110 +6,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 完全隱藏瀏覽器滾輪條和邊界
-st.markdown("""
-<style>
-    /* ===== 最高優先級：隱藏瀏覽器滾輪條 ===== */
-    html {
-        overflow-y: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
-        background: transparent !important;
-    }
-    
-    body {
-        overflow: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
-        background: transparent !important;
-    }
-    
-    /* ===== 重置所有預設邊距 ===== */
-    * {
-        margin: 0 !important;
-        padding: 0 !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* ===== 隱藏 Streamlit UI ===== */
-    [data-testid="stHeaderActionItems"],
-    [data-testid="stHeader"],
-    [data-testid="stToolbar"],
-    [data-testid="stSidebarContent"] {
-        display: none !important;
-    }
-    
-    /* ===== Streamlit 容器透明化 - 最關鍵 ===== */
-    .stApp {
-        background: transparent !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        width: 100vw !important;
-        height: 100vh !important;
-    }
-    
-    .main {
-        background: transparent !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        overflow-y: auto !important;
-        width: 100% !important;
-    }
-    
-    .block-container {
-        background: transparent !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    
-    /* ===== 移除所有裝飾元素 ===== */
-    [data-testid="stDecoratedObject"],
-    [data-testid="stMarkdownContainer"],
-    [data-testid="stVerticalBlock"],
-    .streamlit-container {
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        background: transparent !important;
-    }
-    
-    /* ===== iframe 處理 ===== */
-    iframe {
-        border: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-    }
-    
-    /* ===== 美化 Streamlit 滾輪條 ===== */
-    .main::-webkit-scrollbar {
-        width: 12px !important;
-    }
-    
-    .main::-webkit-scrollbar-track {
-        background: rgba(10, 14, 39, 0.1) !important;
-    }
-    
-    .main::-webkit-scrollbar-thumb {
-        background: rgba(131, 201, 255, 0.5) !important;
-        border-radius: 6px !important;
-    }
-    
-    .main::-webkit-scrollbar-thumb:hover {
-        background: rgba(131, 201, 255, 0.8) !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
+# 直接用 HTML 注入整個頁面 - 模仿 Exifa.net 的方式
 html_content = """
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -126,24 +22,22 @@ html_content = """
             height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         
         #particles-js {
             position: fixed;
-            width: calc(100% - 12px);
+            width: 100%;
             height: 100%;
             top: 0;
             left: 0;
             z-index: 0;
-            right: 0;
         }
         
         .content {
             position: relative;
             z-index: 10;
-            width: calc(100% - 12px);
-            min-height: 100vh;
+            width: 100%;
         }
         
         .gradient-title {
@@ -337,9 +231,9 @@ html_content = """
                     "value": 0.6,
                     "random": false,
                     "anim": {
-                        "enable": true,
-                        "speed": 2,
-                        "opacity_min": 0.2,
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
                         "sync": false
                     }
                 },
@@ -347,8 +241,8 @@ html_content = """
                     "value": 2.5,
                     "random": true,
                     "anim": {
-                        "enable": true,
-                        "speed": 20,
+                        "enable": false,
+                        "speed": 40,
                         "size_min": 0.1,
                         "sync": false
                     }
@@ -421,4 +315,6 @@ html_content = """
 </html>
 """
 
+# 用 Streamlit 的 components 注入整個 HTML
+import streamlit.components.v1 as components
 components.html(html_content, height=4000, scrolling=True)
