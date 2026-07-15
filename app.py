@@ -198,3 +198,159 @@ html, body {
     background: conic-gradient(#51c7ff 0 42%, #ed73b7 42% 68%, #63d7a4 68% 83%, #ffc65a 83% 100%);
     animation: rotateDonut 4s linear infinite;
 }
+.donut::after {
+    content: "研究\A受試者";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    margin: 21px;
+    border-radius: 50%;
+    background: #101c31;
+    color: #e8f7ff;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    white-space: pre;
+}
+@keyframes rotateDonut { to { transform: rotate(360deg); } }
+
+/* 行銷資料動畫 */
+.island {
+    position: absolute;
+    width: 165px;
+    height: 110px;
+    border-radius: 50%;
+    background:
+        radial-gradient(ellipse at 50% 38%, #58ce82 0 22%, #2e8c56 23% 35%, #174e43 36% 55%, transparent 56%),
+        radial-gradient(ellipse at 50% 78%, #1676ae 0 38%, transparent 40%);
+    filter: drop-shadow(0 18px 12px rgba(0, 0, 0, .55));
+}
+.flag { position: absolute; top: 2px; left: 70px; width: 4px; height: 48px; background: #dff8ff; }
+.flag span { position: absolute; top: 0; left: 4px; min-width: 48px; padding: 4px 7px; border-radius: 0 5px 5px 0; color: white; font-size: 11px; font-weight: 700; text-align: center; background: #1877f2; }
+.flag.google span { background: #4285f4; }.flag.line span { background: #06c755; }.flag.money span { background: #e0a51b; }
+.m1 { left: 7%; top: 36%; }.m2 { right: 8%; top: 23%; }.m3 { left: 18%; bottom: 10%; }.m4 { right: 17%; bottom: 10%; }
+
+.sheet-window { overflow: hidden; border: 1px solid #8edcff; border-radius: 14px; background: #f7fbff; box-shadow: 0 15px 45px rgba(0, 0, 0, .45); color: #25364b; }
+.sheet-top { padding: 12px 16px; background: #1a9b59; color: white; font-size: 16px; font-weight: 700; }
+.sheet-grid { grid-template-columns: 1.2fr .9fr .9fr .9fr .9fr; font-size: 13px; }
+.sheet-grid .head { color: white; font-weight: 700; background: #3b7f5d; }
+
+.bars { height: 124px; display: flex; align-items: end; justify-content: space-around; gap: 10px; padding-top: 15px; }
+.bar { width: 18%; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, #5ccfff, #3c7bf5); animation: barMove 1.7s ease-in-out infinite alternate; }
+.bar:nth-child(2) { animation-delay: .2s; background: linear-gradient(180deg, #f76ec8, #9c5fff); }.bar:nth-child(3) { animation-delay: .5s; }.bar:nth-child(4) { animation-delay: .1s; background: linear-gradient(180deg, #5bd9a3, #31a46d); }.bar:nth-child(5) { animation-delay: .4s; }
+@keyframes barMove { from { transform: scaleY(.52); transform-origin: bottom; } to { transform: scaleY(1); transform-origin: bottom; } }
+.line-chart { height: 124px; margin-top: 15px; overflow: hidden; }.line-chart svg { width: 100%; height: 100%; }
+.line-chart path { fill: none; stroke: #f46cc4; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; animation: drawLine 2.2s ease-in-out infinite alternate; }
+@keyframes drawLine { from { stroke-dashoffset: 400; opacity: .45; } to { stroke-dashoffset: 0; opacity: 1; } }
+
+/* 20 秒循環：醫療資料來源 → 結構化資料表 → 儀表板 */
+.medical-scene.run .consent { animation: medicalConsent 20s ease-in-out infinite; }
+.medical-scene.run .emr { animation: medicalEmr 20s ease-in-out infinite; }
+.medical-scene.run .pathology { animation: medicalPathology 20s ease-in-out infinite; }
+@keyframes medicalConsent { 0%, 6% { opacity: 1; transform: rotate(-7deg) translate(0, 0); } 14% { opacity: 1; transform: rotate(-4deg) translate(10px, -8px); } 22% { opacity: 1; transform: rotate(-8deg) translate(-8px, 6px); } 27% { opacity: 1; transform: translate(285px, 135px) rotate(0) scale(.6); } 30%, 100% { opacity: 0; transform: translate(285px, 135px) rotate(0) scale(.6); } }
+@keyframes medicalEmr { 0%, 6% { opacity: 1; transform: rotate(4deg) translate(0, 0); } 14% { opacity: 1; transform: rotate(7deg) translate(-10px, 8px); } 22% { opacity: 1; transform: rotate(3deg) translate(8px, -5px); } 27% { opacity: 1; transform: translate(105px, -75px) rotate(0) scale(.6); } 30%, 100% { opacity: 0; transform: translate(105px, -75px) rotate(0) scale(.6); } }
+@keyframes medicalPathology { 0%, 6% { opacity: 1; transform: rotate(6deg) translate(0, 0); } 14% { opacity: 1; transform: rotate(3deg) translate(-9px, -9px); } 22% { opacity: 1; transform: rotate(8deg) translate(8px, 6px); } 27% { opacity: 1; transform: translate(-295px, 170px) rotate(0) scale(.6); } 30%, 100% { opacity: 0; transform: translate(-295px, 170px) rotate(0) scale(.6); } }
+
+.medical-scene.run .t1 { animation: token1 20s ease-in-out infinite; }.medical-scene.run .t2 { animation: token2 20s ease-in-out infinite; }.medical-scene.run .t3 { animation: token3 20s ease-in-out infinite; }.medical-scene.run .t4 { animation: token4 20s ease-in-out infinite; }.medical-scene.run .t5 { animation: token5 20s ease-in-out infinite; }.medical-scene.run .t6 { animation: token6 20s ease-in-out infinite; }
+@keyframes token1 { 0%, 27% { opacity: 0; transform: translate(0,0) scale(.8); } 30%, 33% { opacity: 1; transform: translate(120px,120px); } 36%,100% { opacity: 0; transform: translate(260px,220px) scale(.2); } }
+@keyframes token2 { 0%, 28% { opacity: 0; transform: translate(0,0) scale(.8); } 31%,34% { opacity: 1; transform: translate(50px,150px); } 37%,100% { opacity: 0; transform: translate(160px,245px) scale(.2); } }
+@keyframes token3 { 0%, 29% { opacity: 0; transform: translate(0,0) scale(.8); } 32%,35% { opacity: 1; transform: translate(-30px,120px); } 38%,100% { opacity: 0; transform: translate(-70px,220px) scale(.2); } }
+@keyframes token4 { 0%, 30% { opacity: 0; transform: translate(0,0) scale(.8); } 33%,36% { opacity: 1; transform: translate(-120px,130px); } 39%,100% { opacity: 0; transform: translate(-250px,225px) scale(.2); } }
+@keyframes token5 { 0%, 31% { opacity: 0; transform: translate(0,0) scale(.8); } 34%,37% { opacity: 1; transform: translate(-100px,-80px); } 40%,100% { opacity: 0; transform: translate(-220px,-150px) scale(.2); } }
+@keyframes token6 { 0%, 32% { opacity: 0; transform: translate(0,0) scale(.8); } 35%,38% { opacity: 1; transform: translate(60px,-100px); } 41%,100% { opacity: 0; transform: translate(130px,-180px) scale(.2); } }
+.medical-scene.run .medical-table { animation: medicalTable 20s ease-in-out infinite; }
+.medical-scene.run .medical-dashboard { animation: medicalDashboard 20s ease-in-out infinite; }
+@keyframes medicalTable { 0%, 38% { opacity: 0; transform: translate(-50%,-50%) scale(.72); } 42%, 60% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 65%,100% { opacity: 0; transform: translate(-50%,-50%) scale(.86); } }
+@keyframes medicalDashboard { 0%, 65% { opacity: 0; transform: translate(-50%,-50%) scale(.82); } 70%, 91% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 96%,100% { opacity: 0; transform: translate(-50%,-50%) scale(.86); } }
+
+/* 20 秒循環：行銷孤島 → Google Sheet → 儀表板 */
+.marketing-scene.run .m1 { animation: island1 20s ease-in-out infinite; }.marketing-scene.run .m2 { animation: island2 20s ease-in-out infinite; }.marketing-scene.run .m3 { animation: island3 20s ease-in-out infinite; }.marketing-scene.run .m4 { animation: island4 20s ease-in-out infinite; }
+@keyframes island1 { 0%,4% { opacity:1; transform:translate(0,0) rotate(0); } 12% { transform:translate(18px,-16px) rotate(3deg); } 20% { transform:translate(-12px,10px) rotate(-2deg); } 24% { opacity:1; transform:translate(330px,100px) scale(.72); } 27%,100% { opacity:0; transform:translate(330px,100px) scale(.72); } }
+@keyframes island2 { 0%,4% { opacity:1; transform:translate(0,0) rotate(0); } 12% { transform:translate(-16px,15px) rotate(-3deg); } 20% { transform:translate(12px,-10px) rotate(2deg); } 24% { opacity:1; transform:translate(-340px,180px) scale(.72); } 27%,100% { opacity:0; transform:translate(-340px,180px) scale(.72); } }
+@keyframes island3 { 0%,4% { opacity:1; transform:translate(0,0) rotate(0); } 12% { transform:translate(-13px,-14px) rotate(2deg); } 20% { transform:translate(18px,8px) rotate(-2deg); } 24% { opacity:1; transform:translate(195px,-170px) scale(.72); } 27%,100% { opacity:0; transform:translate(195px,-170px) scale(.72); } }
+@keyframes island4 { 0%,4% { opacity:1; transform:translate(0,0) rotate(0); } 12% { transform:translate(15px,13px) rotate(-2deg); } 20% { transform:translate(-14px,-8px) rotate(2deg); } 24% { opacity:1; transform:translate(-230px,-170px) scale(.72); } 27%,100% { opacity:0; transform:translate(-230px,-170px) scale(.72); } }
+.marketing-scene.run .data-sheet { animation: marketingSheet 20s ease-in-out infinite; }
+.marketing-scene.run .marketing-dashboard { animation: marketingDashboard 20s ease-in-out infinite; }
+@keyframes marketingSheet { 0%,25% { opacity:0; transform:translate(-50%,-50%) scale(.72); } 28%,48% { opacity:1; transform:translate(-50%,-50%) scale(1); } 53%,100% { opacity:0; transform:translate(-50%,-50%) scale(.85); } }
+@keyframes marketingDashboard { 0%,53% { opacity:0; transform:translate(-50%,-50%) scale(.82); } 58%,91% { opacity:1; transform:translate(-50%,-50%) scale(1); } 96%,100% { opacity:0; transform:translate(-50%,-50%) scale(.86); } }
+
+.case-section { padding-top: 105px; text-align: center; }.case-label { margin-bottom: 24px; color:#d8f3ff; font-size:25px; font-weight:700; letter-spacing:3px; }
+.case-card { display:inline-block; position:relative; width:min(330px,85vw); height:330px; overflow:hidden; border-radius:28px; box-shadow:0 0 45px rgba(79,181,255,.48); text-decoration:none; transition:transform .35s ease, box-shadow .35s ease; }
+.case-card:hover { transform:translateY(-12px) scale(1.04); box-shadow:0 0 70px rgba(79,181,255,.85); }.case-card img { width:100%; height:100%; object-fit:cover; transition:filter .35s ease; }
+.case-card::after { content:"查看參考案例"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(3,10,30,.76); color:#fff; font-size:28px; font-weight:700; opacity:0; transition:opacity .35s ease; }.case-card:hover img { filter:blur(2px) brightness(.5); }.case-card:hover::after { opacity:1; }
+
+@media (max-width: 768px) {
+    .content { width: min(100% - 30px, 1400px); padding-top: 55px; }.title { letter-spacing: 3px; }.intro { padding: 25px 20px; }.scene { min-height: 680px; }.medical-scene { min-height: 760px; }.scene-note { left:18px; right:18px; font-size:14px; }.chart-row { grid-template-columns:1fr; }.dashboard { padding:16px; }.metrics { gap:7px; }.metric b { font-size:16px; }.medical-grid { font-size:9px; }.medical-grid div { padding:7px 3px; }.island { transform:scale(.72); }.m1 { left:-5%; }.m2 { right:-5%; }.m3 { left:0; }.m4 { right:0; }.document { transform:scale(.72); }.consent { left:-5%; }.emr { left:20%; }.pathology { right:-5%; }
+}
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<main class="content">
+    <section class="hero">
+        <h1 class="title">V數據工作室</h1>
+        <p class="tagline">繁瑣流程自動化，放大您的決策價值</p>
+        <p class="description">協助打造專屬自動化流程，整合 Excel、Google Sheets、資料庫與儀錶板，讓每天重複的工作一鍵完成。</p>
+    </section>
+
+    <section class="intro">
+        大家好，我是 Ivy。曾參與台灣國科會大數據建構計畫，協助醫療體系建立研究資料架構。<br>
+        我相信，AI 的價值，不在於模型有多厲害，而在於是否建立在好的資料流程之上。<br>
+        我希望透過資料整理、自動化與 AI 應用，協助企業與研究團隊減少重複工作，讓數據真正成為決策的力量。
+    </section>
+
+    <section class="section-heading">
+        <h2>醫療研究資料結構化</h2>
+        <p>從受試者同意書、電子病歷與病理報告，擷取關鍵欄位並建立可分析資料庫。</p>
+    </section>
+    <section class="scene medical-scene js-scene">
+        <div class="scene-note">OCR 關鍵字擷取 → 資料結構化 → 研究儀表板（以下皆為去識別示意資料）</div>
+        <div class="document consent"><h4>受試者同意書</h4><p>研究計畫：婦癌臨床研究</p><p>受試者姓名：王○○</p><p>病歷號碼：MRN-XXXX21</p><p>性別：Female</p><p>同意日期：2026/06/18</p><p>簽署狀態：已同意</p></div>
+        <div class="document emr"><h4>Electronic Medical Record</h4><div class="csv-code">patient_id, visit_date, dx_code<br>PT-0182, 2026-06-18, C54.1<br>PT-0182, 2026-06-22, OP-HTX<br>lab_hgb, stage, follow_up<br>11.2, FIGO_II, 2026-07-10</div></div>
+        <div class="document pathology"><h4>Pathology Report</h4><p>Specimen: Endometrium</p><p>Histologic type: Adenocarcinoma</p><p>Tumor size: 6.7 cm</p><p>Myometrial invasion: Present</p><p>Lymph node: Negative</p><p>Stage: FIGO II</p></div>
+        <div class="data-token t1">受試者 ID</div><div class="data-token t2">同意日期</div><div class="data-token t3">診斷代碼 C54.1</div><div class="data-token t4">腫瘤大小 6.7 cm</div><div class="data-token t5">FIGO Stage II</div><div class="data-token t6">淋巴結陰性</div>
+        <div class="medical-table"><div class="structured-label">資料結構化｜Research Database</div><div class="medical-grid"><div class="head">subject_id</div><div class="head">consent</div><div class="head">sex</div><div class="head">diagnosis</div><div class="head">tumor_size</div><div class="head">stage</div><div>PT-0182</div><div>2026-06-18</div><div>F</div><div>C54.1</div><div>6.7 cm</div><div>FIGO II</div><div>PT-0217</div><div>2026-06-20</div><div>F</div><div>C53.9</div><div>3.1 cm</div><div>FIGO IB</div><div>PT-0241</div><div>2026-06-22</div><div>F</div><div>C54.1</div><div>2.8 cm</div><div>FIGO I</div></div></div>
+        <div class="dashboard medical-dashboard"><div class="dashboard-title">醫療研究資料儀表板</div><div class="metrics"><div class="metric"><small>納入受試者</small><b>248</b></div><div class="metric"><small>完成同意書</small><b>231</b></div><div class="metric"><small>資料完整度</small><b>93.1%</b></div></div><div class="chart-row"><div class="chart-box"><small>分期分布</small><div class="donut-wrap"><div class="donut"></div></div></div><div class="chart-box"><small>每月納入個案數</small><div class="line-chart"><svg viewBox="0 0 300 120" preserveAspectRatio="none"><path d="M0,100 C25,84 42,92 65,72 S100,32 123,57 S155,80 180,44 S215,18 238,40 S270,58 300,20"></path></svg></div></div></div></div>
+    </section>
+
+    <section class="section-heading">
+        <h2>行銷資料整合</h2>
+        <p>分散的平台資料，集中為可追蹤、可決策的資訊。</p>
+    </section>
+    <section class="scene marketing-scene js-scene">
+        <div class="scene-note">Meta、Google、LINE 與金流資料，自動集中、整理並即時視覺化</div>
+        <div class="island m1"><div class="flag"><span>Meta</span></div></div><div class="island m2"><div class="flag google"><span>Google</span></div></div><div class="island m3"><div class="flag line"><span>LINE</span></div></div><div class="island m4"><div class="flag money"><span>$ 金流</span></div></div>
+        <div class="data-sheet"><div class="sheet-window"><div class="sheet-top">Google Sheets ｜ Marketing Data</div><div class="sheet-grid"><div class="head">日期</div><div class="head">平台</div><div class="head">曝光</div><div class="head">轉換</div><div class="head">營收</div><div>2026/07/01</div><div>Meta</div><div>82,450</div><div>1,268</div><div>$96,200</div><div>2026/07/01</div><div>Google</div><div>65,710</div><div>998</div><div>$88,750</div><div>2026/07/01</div><div>LINE</div><div>41,300</div><div>650</div><div>$48,100</div><div>2026/07/01</div><div>後台訂單</div><div>－</div><div>2,916</div><div>$233,050</div></div></div></div>
+        <div class="dashboard marketing-dashboard"><div class="dashboard-title">行銷成效儀表板</div><div class="metrics"><div class="metric"><small>總曝光</small><b>189,460</b></div><div class="metric"><small>轉換數</small><b>2,916</b></div><div class="metric"><small>本月營收</small><b>$233K</b></div></div><div class="chart-row"><div class="chart-box"><small>各平台轉換數</small><div class="bars"><div class="bar" style="height:65%"></div><div class="bar" style="height:88%"></div><div class="bar" style="height:52%"></div><div class="bar" style="height:75%"></div><div class="bar" style="height:45%"></div></div></div><div class="chart-box"><small>每日營收趨勢</small><div class="line-chart"><svg viewBox="0 0 300 120" preserveAspectRatio="none"><path d="M0,90 C25,70 35,85 58,60 S95,40 115,62 S145,98 170,55 S205,20 225,45 S260,72 300,25"></path></svg></div></div></div></div>
+    </section>
+
+    <section class="case-section"><p class="case-label">參考案例</p><a class="case-card" href="https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/" target="_blank" rel="noopener noreferrer"><img src="https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true" alt="參考案例"></a></section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-js", {
+    particles: { number: { value: 220, density: { enable: true, value_area: 800 } }, color: { value: "#ffffff" }, shape: { type: "circle" }, opacity: { value: 0.55, random: false }, size: { value: 2.3, random: true }, line_linked: { enable: true, distance: 135, color: "#83c9ff", opacity: 0.25, width: 1.3 }, move: { enable: true, speed: 0.25, direction: "none", random: false, straight: false, out_mode: "out", bounce: true } },
+    interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "repulse" }, resize: true }, modes: { grab: { distance: 140, line_linked: { opacity: 1 } }, repulse: { distance: 220, duration: 0.5 } } },
+    retina_detect: true
+});
+
+const scenes = document.querySelectorAll(".js-scene");
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting && !entry.target.classList.contains("run")) {
+            entry.target.classList.add("run");
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.42 });
+scenes.forEach((scene) => observer.observe(scene));
+</script>
+</body>
+</html>
+"""
+
+components.html(html_content, height=3700, scrolling=True)
