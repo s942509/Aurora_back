@@ -1,262 +1,240 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="數據工作室 | Data Studio", 
+    page_title="V數據工作室 | Data Studio",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
-# 隱藏 Streamlit 邊界
 st.markdown("""
 <style>
-    iframe { border: none !important; margin: 0 !important; padding: 0 !important; }
-    .stApp { margin: 0 !important; padding: 0 !important; }
-    .main { margin: 0 !important; padding: 0 !important; }
-    .block-container { margin: 0 !important; padding: 0 !important; }
+    .stApp, .main, .block-container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    iframe {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# 直接用 HTML 注入整個頁面 - 模仿 Exifa.net 的方式
 html_content = """
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>數據工作室</title>
+    <title>V數據工作室</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         html, body {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100%;
+            background: linear-gradient(135deg, #070b23 0%, #111a3d 100%);
+            color: #e8f7ff;
+            font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
             overflow-x: hidden;
         }
-        
+
         #particles-js {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+            inset: 0;
             z-index: 0;
         }
-        
+
         .content {
             position: relative;
-            z-index: 10;
-            width: 100%;
+            z-index: 1;
+            width: min(1400px, calc(100% - 64px));
+            margin: 0 auto;
+            padding: 95px 0 90px;
         }
-        
-        .gradient-title {
-            font-size: 70px;
-            font-weight: bold;
+
+        .hero {
             text-align: center;
-            background: linear-gradient(to right, #FFABAB, #83C9FF, #0068C9);
+            margin-bottom: 62px;
+        }
+
+        .title {
+            font-size: clamp(56px, 8vw, 118px);
+            font-weight: 800;
+            letter-spacing: 8px;
+            line-height: 1.15;
+            background: linear-gradient(180deg, #38c4ff 15%, #c8efff 58%, #53a9ec 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 80px 0 50px 0;
+            text-shadow: 0 10px 22px rgba(37, 156, 255, 0.18);
+            margin-bottom: 42px;
+        }
+
+        .tagline {
+            text-align: left;
+            font-size: clamp(25px, 2.2vw, 39px);
+            font-weight: 700;
+            line-height: 1.55;
+            color: #d9f2ff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 16px rgba(140, 211, 255, 0.35);
+        }
+
+        .description {
+            text-align: left;
+            font-size: clamp(20px, 1.75vw, 30px);
+            line-height: 1.8;
             letter-spacing: 2px;
-            filter: drop-shadow(0 0 30px rgba(131, 201, 255, 0.6));
+            color: #d4eaff;
+            margin-bottom: 62px;
         }
-        
-        .case-container {
-            display: flex;
-            justify-content: center;
-            margin: 80px 0;
+
+        .intro {
+            text-align: left;
+            font-size: clamp(20px, 1.7vw, 29px);
+            line-height: 1.65;
+            letter-spacing: 1px;
+            color: #d9efff;
+            max-width: 1280px;
+            margin: 0 auto 85px;
+            padding: 38px 42px;
+            border-left: 3px solid rgba(91, 200, 255, 0.75);
+            background: rgba(8, 18, 52, 0.32);
+            backdrop-filter: blur(8px);
         }
-        
+
+        .case-section {
+            text-align: center;
+            padding-top: 15px;
+        }
+
+        .case-label {
+            font-size: 25px;
+            font-weight: 700;
+            color: #d8f3ff;
+            margin-bottom: 24px;
+            letter-spacing: 3px;
+        }
+
         .case-card {
+            display: inline-block;
             position: relative;
-            width: 280px;
-            height: 280px;
-            border-radius: 25px;
+            width: min(330px, 85vw);
+            height: 330px;
             overflow: hidden;
-            box-shadow: 0 0 60px rgba(131, 201, 255, 0.4);
-            cursor: pointer;
-            transition: all 0.4s ease;
+            border-radius: 28px;
+            text-decoration: none;
+            box-shadow: 0 0 45px rgba(79, 181, 255, 0.48);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
         }
-        
+
         .case-card:hover {
-            transform: scale(1.1) translateY(-15px);
-            box-shadow: 0 0 80px rgba(131, 201, 255, 0.8);
+            transform: translateY(-12px) scale(1.04);
+            box-shadow: 0 0 70px rgba(79, 181, 255, 0.85);
         }
-        
+
         .case-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: filter 0.3s ease;
+            transition: filter 0.35s ease;
         }
-        
-        .overlay-text {
+
+        .case-card::after {
+            content: "查看參考案例";
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 28px;
-            font-weight: bold;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(3, 10, 30, 0.76);
             color: white;
+            font-size: 28px;
+            font-weight: 700;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+            transition: opacity 0.35s ease;
         }
-        
-        .case-card:hover .overlay-text { opacity: 1; }
-        .case-card:hover img { filter: brightness(0.3) blur(3px); }
-        
-        .contact-container {
-            background: rgba(10, 14, 39, 0.4);
-            backdrop-filter: blur(30px);
-            padding: 60px;
-            border-radius: 30px;
-            border: 2px solid rgba(131, 201, 255, 0.2);
-            margin: 100px auto 60px auto;
-            max-width: 1000px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+
+        .case-card:hover img {
+            filter: blur(2px) brightness(0.5);
         }
-        
-        .contact-container h2 {
-            color: white;
-            margin-bottom: 40px;
-            font-size: 28px;
+
+        .case-card:hover::after {
+            opacity: 1;
         }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        input[type="text"], 
-        input[type="email"], 
-        textarea {
-            padding: 15px 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(131, 201, 255, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-        
-        input[type="text"]:focus, 
-        input[type="email"]:focus, 
-        textarea:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(131, 201, 255, 0.8);
-            box-shadow: 0 0 20px rgba(131, 201, 255, 0.4);
-            outline: none;
-        }
-        
-        input::placeholder, 
-        textarea::placeholder { 
-            color: rgba(255, 255, 255, 0.5); 
-        }
-        
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            margin-top: 30px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, #0068C9, #0054a8);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0, 104, 201, 0.6);
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 104, 201, 0.8);
-        }
-        
+
         @media (max-width: 768px) {
-            .gradient-title { font-size: 48px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .contact-container { padding: 30px; }
+            .content {
+                width: min(100% - 36px, 1400px);
+                padding: 60px 0;
+            }
+
+            .title {
+                letter-spacing: 3px;
+                margin-bottom: 30px;
+            }
+
+            .intro {
+                padding: 26px 22px;
+            }
+
+            .case-card {
+                height: 280px;
+            }
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
-    
-    <div class="content">
-        <div class="gradient-title">數據工作室</div>
-        
-        <div class="case-container">
-            <a href="https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/" target="_blank" style="text-decoration: none;">
-                <div class="case-card">
-                    <img src="https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true" alt="參考案例">
-                    <div class="overlay-text">參考案例</div>
-                </div>
+
+    <main class="content">
+        <section class="hero">
+            <h1 class="title">V數據工作室</h1>
+
+            <p class="tagline">繁瑣流程自動化，放大您的決策價值</p>
+
+            <p class="description">
+                協助打造專屬自動化流程，整合 Excel、Google Sheets、資料庫與儀錶板，
+                讓每天重複的工作一鍵完成。
+            </p>
+        </section>
+
+        <section class="intro">
+            大家好，我是 Ivy。曾參與台灣國科會大數據建構計畫，協助醫療體系建立研究資料架構。<br>
+            我相信，AI 的價值，不在於模型有多厲害，而在於是否建立在好的資料流程之上。<br>
+            我希望透過資料整理、自動化與 AI 應用，協助企業與研究團隊減少重複工作，
+            讓數據真正成為決策的力量。
+        </section>
+
+        <section class="case-section">
+            <p class="case-label">參考案例</p>
+
+            <a class="case-card"
+               href="https://marketing-objectives-managementdashboard-mlxu3hfgu6pzpysxirvjm.streamlit.app/"
+               target="_blank"
+               rel="noopener noreferrer">
+                <img src="https://github.com/s942509/Aurora_back/blob/main/demo_img.png?raw=true"
+                     alt="參考案例">
             </a>
-        </div>
-        
-        <div class="contact-container">
-            <h2>聯絡我們</h2>
-            <form action="https://formsubmit.co/s942509@gmail.com" method="POST">
-                <div class="form-grid">
-                    <input type="text" name="統一編號" placeholder="*統一編號" required>
-                    <input type="text" name="公司名稱" placeholder="*公司名稱" required>
-                    <input type="text" name="部門" placeholder="*部門" required>
-                    <input type="text" name="職稱" placeholder="*職稱" required>
-                    <input type="text" name="名字" placeholder="*名字" required>
-                    <input type="text" name="姓氏" placeholder="*姓氏" required>
-                </div>
-                <input type="email" name="email" placeholder="*Email" required style="width: 100%; margin-bottom: 20px;">
-                <textarea name="message" placeholder="備註 (選填)" rows="5" style="width: 100%; margin-bottom: 20px;"></textarea>
-                <button type="submit" class="submit-btn">提交</button>
-            </form>
-        </div>
-        <br><br>
-    </div>
-    
+        </section>
+    </main>
+
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         particlesJS("particles-js", {
             "particles": {
                 "number": {
                     "value": 280,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
+                    "density": { "enable": true, "value_area": 800 }
                 },
-                "color": {
-                    "value": "#ffffff"
-                },
-                "shape": {
-                    "type": "circle"
-                },
-                "opacity": {
-                    "value": 0.6,
-                    "random": false,
-                    "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 2.5,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 40,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.6, "random": false },
+                "size": { "value": 2.5, "random": true },
                 "line_linked": {
                     "enable": true,
                     "distance": 130,
@@ -271,50 +249,24 @@ html_content = """
                     "random": false,
                     "straight": false,
                     "out_mode": "out",
-                    "bounce": true,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
+                    "bounce": true
                 }
             },
             "interactivity": {
                 "detect_on": "canvas",
                 "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "repulse"
-                    },
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "repulse" },
                     "resize": true
                 },
                 "modes": {
                     "grab": {
                         "distance": 140,
-                        "line_linked": {
-                            "opacity": 1
-                        }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
+                        "line_linked": { "opacity": 1 }
                     },
                     "repulse": {
                         "distance": 220,
                         "duration": 0.5
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
                     }
                 }
             },
@@ -325,6 +277,4 @@ html_content = """
 </html>
 """
 
-# 用 Streamlit 的 components 注入整個 HTML
-import streamlit.components.v1 as components
-components.html(html_content, height=4000, scrolling=True)
+components.html(html_content, height=1250, scrolling=True)
